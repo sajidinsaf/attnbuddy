@@ -1,0 +1,49 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+dist/
+build/
+target/
+out/
+*.class
+*.jar
+*.war
+
+# IDE
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+*.swp
+*.swo
+
+# Environment & secrets
+.env
+.env.*
+.dev.vars
+*.env.local
+
+# Claude Code
+.claude/settings.local.json
+.claude/worktrees/
+.claude/agent-memory/
+.claude/scheduled_tasks.lock
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Temp
+tmp/
+*.tmp

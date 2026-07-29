@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(gh *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(pnpm *)",
+      "Bash(node *)",
+      "Bash(java *)",
+      "Bash(mvn *)",
+      "Bash(./mvnw *)",
+      "Bash(tsc *)",
+      "Bash(tsx *)",
+      "Bash(curl *)",
+      "Bash(jq *)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(cd *)"
+    ]
+  }
+}
