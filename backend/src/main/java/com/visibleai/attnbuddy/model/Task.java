@@ -48,6 +48,16 @@ public class Task {
     @Column(name = "snoozed_until")
     private Instant snoozedUntil;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "task_type", nullable = false)
+    private TaskType taskType = TaskType.ONE_TIME;
+
+    @Column(name = "daily_effort_minutes")
+    private Integer dailyEffortMinutes;
+
+    @Column(name = "target_date")
+    private Instant targetDate;
+
     @Column(name = "skip_count", nullable = false)
     private int skipCount = 0;
 
@@ -57,6 +67,7 @@ public class Task {
     @Column(name = "completed_at")
     private Instant completedAt;
 
+    public enum TaskType { ONE_TIME, SUSTAINED }
     public enum Urgency { URGENT, NOT_URGENT }
     public enum Importance { IMPORTANT, NOT_IMPORTANT }
     public enum Status { PENDING, DONE, SKIPPED, SNOOZED }
@@ -115,4 +126,13 @@ public class Task {
     public void setImportance(Importance importance) { this.importance = importance; }
     public void setStatus(Status status) { this.status = status; }
     public void setDueDate(Instant dueDate) { this.dueDate = dueDate; }
+    public void setTaskType(TaskType taskType) { this.taskType = taskType; }
+    public void setDailyEffortMinutes(Integer dailyEffortMinutes) { this.dailyEffortMinutes = dailyEffortMinutes; }
+    public void setTargetDate(Instant targetDate) { this.targetDate = targetDate; }
+
+    public TaskType getTaskType() { return taskType; }
+    public Integer getDailyEffortMinutes() { return dailyEffortMinutes; }
+    public Instant getTargetDate() { return targetDate; }
+
+    public boolean isSustained() { return taskType == TaskType.SUSTAINED; }
 }

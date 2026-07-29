@@ -23,6 +23,14 @@ export type Domain = {
 export type Urgency = 'URGENT' | 'NOT_URGENT';
 export type Importance = 'IMPORTANT' | 'NOT_IMPORTANT';
 export type TaskStatus = 'PENDING' | 'DONE' | 'SKIPPED' | 'SNOOZED';
+export type TaskType = 'ONE_TIME' | 'SUSTAINED';
+
+export type SustainedProgress = {
+  completedSessions: number;
+  totalMinutesLogged: number;
+  estimatedTotalMinutes: number;
+  percentComplete: number;
+};
 
 export type TaskResponse = {
   id: number;
@@ -39,6 +47,10 @@ export type TaskResponse = {
   domainName: string | null;
   domainColor: string | null;
   score: number | null;
+  taskType: TaskType;
+  dailyEffortMinutes: number | null;
+  targetDate: string | null;
+  progress: SustainedProgress | null;
 };
 
 export type NowResponse = {
