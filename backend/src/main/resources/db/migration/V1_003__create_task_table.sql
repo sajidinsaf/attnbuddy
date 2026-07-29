@@ -1,0 +1,21 @@
+CREATE TABLE task (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    domain_id BIGINT,
+    title VARCHAR(500) NOT NULL,
+    notes TEXT,
+    urgency ENUM('URGENT', 'NOT_URGENT') NOT NULL DEFAULT 'NOT_URGENT',
+    importance ENUM('IMPORTANT', 'NOT_IMPORTANT') NOT NULL DEFAULT 'IMPORTANT',
+    status ENUM('PENDING', 'DONE', 'SKIPPED', 'SNOOZED') NOT NULL DEFAULT 'PENDING',
+    due_date TIMESTAMP NULL,
+    snoozed_until TIMESTAMP NULL,
+    skip_count INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    completed_at TIMESTAMP NULL,
+    CONSTRAINT fk_task_user FOREIGN KEY (user_id) REFERENCES app_user(id),
+    CONSTRAINT fk_task_domain FOREIGN KEY (domain_id) REFERENCES life_domain(id),
+    INDEX idx_task_user_status (user_id, status),
+    INDEX idx_task_user_due (user_id, due_date),
+    INDEX idx_task_snoozed (snoozed_until),
+    INDEX idx_task_domain (domain_id)
+);
