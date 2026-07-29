@@ -71,13 +71,19 @@ This document records non-obvious architectural and product decisions with the r
 
 ---
 
-## DD-007: Three User Contexts, Not Roles
+## DD-007: Life Domains, Not a Single User Context
 
-**Decision**: Users select a "context" (Executive, Professional, Student) at registration. This is not a role/permission system — it controls which templates, default nudge styles, and prioritization hints are applied.
+**Decision**: Instead of a single "context" per user (Executive/Student/Professional), each task belongs to a **life domain** (Work, Family, Personal, Health, Financial, etc.). Users define their own domains, seeded with defaults based on their profile. The prioritization engine balances across domains.
 
-**Why**: The same ADHD challenges manifest differently in different life contexts. A CEO struggling to prioritize strategic work over daily fires needs different templates than a student struggling to start an essay. The context system lets us tailor the experience without building separate apps.
+**Why**: Real users — especially parents who are also executives — don't live in one context. The same person is a CEO at 9am, a parent at 4pm, and managing personal finances at 8pm. A single context misses the majority of their life. Domains let the app:
+- Prioritize across all of life, not just one slice
+- Respect time preferences per domain (no work nudges at dinner time)
+- Surface blind spots in weekly reviews ("0 health tasks this week")
+- Provide domain-specific templates (executive templates for Work, academic templates for Study, etc.)
 
-**Extensible**: New contexts can be added without schema changes (just new template sets and nudge copy).
+**Implementation**: Each user has multiple domains with configurable weights and time preferences. Each task has a `domain_id`. The Prioritization Engine factors domain weight and domain-time-match into scoring. Onboarding seeds default domains based on user's profile (e.g., "Executive" profile gets Work, Family, Personal, Financial domains).
+
+**Extensible**: Users can create custom domains at any time (e.g., "Side Project," "Volunteering," "Fitness").
 
 ---
 

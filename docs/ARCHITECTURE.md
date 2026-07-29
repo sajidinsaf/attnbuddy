@@ -81,7 +81,9 @@ Client                          Server
 Rule-based algorithm, no AI/LLM dependency:
 
 ```
-Score = EisenhowerBase + DeadlineBonus + StalenessBonus + EnergyMatch + GoalAlignment
+Score = EisenhowerBase + DeadlineBonus + StalenessBonus
+        + DomainWeight + DomainTimeMatch
+        + EnergyMatch + GoalAlignment
 
 EisenhowerBase:
   Q1 (Urgent + Important)     = 100
@@ -95,6 +97,14 @@ DeadlineBonus:
 
 StalenessBonus:
   Pending > 3 days = +10
+
+DomainWeight (Phase 1):
+  Normalized domain weight (1-100) mapped to 0-20 bonus
+  e.g., Work domain weight 70 → +14
+
+DomainTimeMatch (Phase 1):
+  Current time within domain's active_start..active_end → +15
+  Current time outside domain's active window → -10
 
 EnergyMatch (Phase 4):
   Current hour is user's high-energy time AND task is Important = +20
