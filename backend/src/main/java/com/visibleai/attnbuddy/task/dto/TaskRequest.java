@@ -10,5 +10,8 @@ public record TaskRequest(
         Task.Urgency urgency,
         Task.Importance importance,
         Long domainId,
-        Instant dueDate
+        Instant dueDate,
+        Task.TaskType taskType,
+        Integer dailyEffortMinutes,
+        Instant targetDate
 ) {}

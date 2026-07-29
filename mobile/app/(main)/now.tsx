@@ -73,11 +73,26 @@ export default function NowScreen() {
                 </Text>
               )}
               <Text style={styles.cardTitle}>{task.title}</Text>
+              {task.taskType === 'SUSTAINED' && task.dailyEffortMinutes && (
+                <Text style={styles.sessionLabel}>
+                  Today's session — {task.dailyEffortMinutes >= 60 ? `${task.dailyEffortMinutes / 60}h` : `${task.dailyEffortMinutes}m`}
+                </Text>
+              )}
               {task.notes && <Text style={styles.cardNotes}>{task.notes}</Text>}
               {task.dueDate && (
                 <Text style={styles.deadline}>
                   Due {formatDeadline(task.dueDate)}
                 </Text>
+              )}
+              {task.progress && (
+                <View style={styles.progressContainer}>
+                  <View style={styles.progressBar}>
+                    <View style={[styles.progressFill, { width: `${Math.min(100, task.progress.percentComplete)}%` }]} />
+                  </View>
+                  <Text style={styles.progressText}>
+                    {task.progress.completedSessions} sessions · {formatMinutes(task.progress.totalMinutesLogged)} of ~{formatMinutes(task.progress.estimatedTotalMinutes)}
+                  </Text>
+                </View>
               )}
               <View style={styles.meta}>
                 <Text style={styles.quadrant}>
@@ -96,7 +111,9 @@ export default function NowScreen() {
                 onPress={() => handleAction('done')}
                 disabled={acting}
               >
-                <Text style={styles.actionText}>Done ✓</Text>
+                <Text style={styles.actionText}>
+                  {task.taskType === 'SUSTAINED' ? "Today's Done ✓" : 'Done ✓'}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.actionBtn, styles.skipBtn]}
@@ -134,6 +151,13 @@ export default function NowScreen() {
   );
 }
 
+function formatMinutes(mins: number): string {
+  if (mins < 60) return `${mins}m`;
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  return m > 0 ? `${h}h ${m}m` : `${h}h`;
+}
+
 function formatDeadline(iso: string): string {
   const due = new Date(iso);
   const now = new Date();
@@ -160,6 +184,11 @@ const styles = StyleSheet.create({
   cardNotes: { color: '#94A3B8', fontSize: 15, marginTop: 10, lineHeight: 22 },
   deadline: { color: '#F59E0B', fontSize: 13, fontWeight: '600', marginTop: 12 },
   meta: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 16 },
+  sessionLabel: { color: '#A5B4FC', fontSize: 13, fontWeight: '600', marginTop: 6 },
+  progressContainer: { marginTop: 14 },
+  progressBar: { height: 6, backgroundColor: '#334155', borderRadius: 3, overflow: 'hidden' as const },
+  progressFill: { height: '100%' as const, backgroundColor: '#6366F1', borderRadius: 3 },
+  progressText: { color: '#64748B', fontSize: 12, marginTop: 6 },
   quadrant: { color: '#64748B', fontSize: 13 },
   score: { color: '#475569', fontSize: 12 },
   actions: { flexDirection: 'row', gap: 10, marginTop: 24 },
