@@ -1,5 +1,5 @@
 const DEV_API_URL = 'http://localhost:8080';
-const PROD_API_URL = 'https://api.visibleai.com';
+const PROD_API_URL = 'https://attnbuddy.visibleai.com';
 
 const API_URL = __DEV__ ? DEV_API_URL : PROD_API_URL;
 
