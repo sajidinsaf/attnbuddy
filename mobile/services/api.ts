@@ -33,7 +33,8 @@ export async function apiRequest<T>(endpoint: string, options: RequestOptions = 
     throw new ApiError(response.status, error.error || 'UNKNOWN', error.message || 'Something went wrong');
   }
 
-  return response.json();
+  const text = await response.text();
+  return text ? JSON.parse(text) : null;
 }
 
 export class ApiError extends Error {

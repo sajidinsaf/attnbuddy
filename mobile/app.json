@@ -24,6 +24,13 @@
     "plugins": [
       "expo-router",
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "87f73194-0090-4428-a0c8-02098a30e506"
+      }
+    },
+    "owner": "visibleai.com"
   }
 }

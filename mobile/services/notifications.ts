@@ -36,10 +36,14 @@ export async function registerForPushNotifications(token: string): Promise<strin
   }
 
   // Get Expo push token
-  const projectId = Constants.expoConfig?.extra?.eas?.projectId;
-  const pushToken = await Notifications.getExpoPushTokenAsync({
-    projectId,
-  });
+  let pushToken;
+  try {
+    const projectId = Constants.expoConfig?.extra?.eas?.projectId || undefined;
+    pushToken = await Notifications.getExpoPushTokenAsync({ projectId });
+  } catch (e) {
+    console.log('Could not get push token (EAS project ID may not be configured):', e);
+    return null;
+  }
 
   // Register with backend
   try {
