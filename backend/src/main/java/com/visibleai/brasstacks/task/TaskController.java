@@ -35,8 +35,10 @@ public class TaskController {
     }
 
     @PostMapping("/{id}/done")
-    public TaskResponse done(Authentication auth, @PathVariable Long id) {
-        return taskService.markDone(getUserId(auth), id);
+    public TaskResponse done(Authentication auth, @PathVariable Long id,
+                             @RequestBody(required = false) DoneRequest request) {
+        return taskService.markDone(getUserId(auth), id,
+                request != null ? request.energyLevel() : null);
     }
 
     @PostMapping("/{id}/skip")
