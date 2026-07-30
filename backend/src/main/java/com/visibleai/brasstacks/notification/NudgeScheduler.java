@@ -124,4 +124,33 @@ public class NudgeScheduler {
                     quickWin.getTitle());
         }
     }
+
+    // Weekly review — Sunday at 6 PM
+    @Scheduled(cron = "0 0 18 * * SUN")
+    public void weeklyReview() {
+        log.info("Running weekly review nudge");
+        Instant oneWeekAgo = Instant.now().minus(Duration.ofDays(7));
+
+        for (User user : userRepository.findAll()) {
+            if (user.isInQuietHours()) continue;
+            if (user.getNudgeFrequency() == User.NudgeFrequency.MINIMAL) continue;
+
+            long completed = taskRepository.countCompletedSince(user.getId(), oneWeekAgo);
+            List<Task> pending = taskRepository.findAllPendingForUser(user.getId());
+
+            StringBuilder body = new StringBuilder();
+            body.append(completed).append(" tasks completed this week. ");
+            body.append(pending.size()).append(" tasks pending.");
+
+            // Count tasks approaching deadline
+            Instant horizon = Instant.now().plus(Duration.ofDays(3));
+            long approaching = taskRepository.findTasksWithDeadlineBetween(
+                    user.getId(), Instant.now(), horizon).size();
+            if (approaching > 0) {
+                body.append(" ").append(approaching).append(" due in the next 3 days.");
+            }
+
+            notificationService.sendToUser(user.getId(), "Your week in review", body.toString());
+        }
+    }
 }
