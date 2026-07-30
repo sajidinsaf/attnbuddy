@@ -163,17 +163,23 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskResponse skip(Long userId, Long taskId) {
+    public TaskResponse skip(Long userId, Long taskId, String context) {
         Task task = getTaskForUser(userId, taskId);
         task.skip();
+        if (context != null && !context.isBlank()) {
+            task.setLastContext(context);
+        }
         taskRepository.save(task);
         return toResponse(task);
     }
 
     @Transactional
-    public TaskResponse snooze(Long userId, Long taskId, Instant until) {
+    public TaskResponse snooze(Long userId, Long taskId, Instant until, String context) {
         Task task = getTaskForUser(userId, taskId);
         task.snooze(until);
+        if (context != null && !context.isBlank()) {
+            task.setLastContext(context);
+        }
         taskRepository.save(task);
         return toResponse(task);
     }

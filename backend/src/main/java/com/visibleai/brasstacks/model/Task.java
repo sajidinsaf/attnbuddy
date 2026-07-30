@@ -71,6 +71,9 @@ public class Task {
     @Column(name = "target_date")
     private Instant targetDate;
 
+    @Column(name = "last_context", columnDefinition = "TEXT")
+    private String lastContext;
+
     @Column(name = "skip_count", nullable = false)
     private int skipCount = 0;
 
@@ -146,6 +149,9 @@ public class Task {
     public TaskType getTaskType() { return taskType; }
     public Integer getDailyEffortMinutes() { return dailyEffortMinutes; }
     public Instant getTargetDate() { return targetDate; }
+
+    public String getLastContext() { return lastContext; }
+    public void setLastContext(String lastContext) { this.lastContext = lastContext; }
 
     public boolean isSustained() { return taskType == TaskType.SUSTAINED; }
     public boolean isMicroStep() { return parentTask != null; }

@@ -5,5 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import java.time.Instant;
 
 public record SnoozeRequest(
-        @NotNull @Future Instant until
+        @NotNull @Future Instant until,
+        String context
 ) {}

@@ -15,7 +15,8 @@ public record TaskResponse(
         Integer dailyEffortMinutes, Instant targetDate,
         SustainedProgress progress,
         Long parentTaskId,
-        List<MicroStepResponse> microSteps
+        List<MicroStepResponse> microSteps,
+        String lastContext
 ) {
     public record SustainedProgress(
             int completedSessions, int totalMinutesLogged,
@@ -43,7 +44,8 @@ public record TaskResponse(
                 t.getDailyEffortMinutes(), t.getTargetDate(),
                 progress,
                 t.getParentTask() != null ? t.getParentTask().getId() : null,
-                microSteps
+                microSteps,
+                t.getLastContext()
         );
     }
 }

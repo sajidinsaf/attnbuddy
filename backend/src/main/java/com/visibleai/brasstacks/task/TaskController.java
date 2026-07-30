@@ -40,14 +40,15 @@ public class TaskController {
     }
 
     @PostMapping("/{id}/skip")
-    public TaskResponse skip(Authentication auth, @PathVariable Long id) {
-        return taskService.skip(getUserId(auth), id);
+    public TaskResponse skip(Authentication auth, @PathVariable Long id,
+                             @RequestBody(required = false) SkipRequest request) {
+        return taskService.skip(getUserId(auth), id, request != null ? request.context() : null);
     }
 
     @PostMapping("/{id}/snooze")
     public TaskResponse snooze(Authentication auth, @PathVariable Long id,
                                @Valid @RequestBody SnoozeRequest request) {
-        return taskService.snooze(getUserId(auth), id, request.until());
+        return taskService.snooze(getUserId(auth), id, request.until(), request.context());
     }
 
     @PostMapping("/{id}/unsnooze")
