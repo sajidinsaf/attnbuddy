@@ -58,13 +58,13 @@ Brasstacks is a mobile app for people with ADHD that acts as an **executive func
 
 | ID | Requirement | Status |
 |----|-------------|--------|
-| P4-01 | When switching tasks, user is prompted to leave a context breadcrumb | Planned |
-| P4-02 | When returning to a task, the previous breadcrumb is shown | Planned |
-| P4-03 | User can optionally log energy level (high / medium / low) | Planned |
-| P4-04 | App tracks completion patterns by time of day (passive learning) | Planned |
-| P4-05 | After 2+ weeks, prioritization engine uses learned energy patterns | Planned |
-| P4-06 | Weekly review notification summarizing progress and slippage | Planned |
-| P4-07 | User can set long-term goals and track progress | Planned |
+| P4-01 | When switching tasks, user is prompted to leave a context breadcrumb | Done |
+| P4-02 | When returning to a task, the previous breadcrumb is shown | Done |
+| P4-03 | User can optionally log energy level (high / medium / low) | Done |
+| P4-04 | App tracks completion patterns by time of day (passive learning) | Done |
+| P4-05 | After 2+ weeks, prioritization engine uses learned energy patterns | Done |
+| P4-06 | Weekly review notification summarizing progress and slippage | Done |
+| P4-07 | User can set long-term goals and track progress | Done |
 
 ## Phase 5: Body Doubling, Rescue Mode & Momentum
 
