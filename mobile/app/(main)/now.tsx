@@ -152,11 +152,16 @@ export default function NowScreen() {
                 </Text>
               )}
               {task.notes && <Text style={styles.cardNotes}>{task.notes}</Text>}
-              {task.dueDate && (
-                <Text style={styles.deadline}>
-                  Due {formatDeadline(task.dueDate)}
-                </Text>
-              )}
+              {task.dueDate && (() => {
+                const dl = getDeadlineInfo(task.dueDate);
+                return (
+                  <View style={[styles.deadlineContainer, { backgroundColor: dl.bgColor }]}>
+                    <Text style={[styles.deadlineText, { color: dl.color }]}>
+                      {dl.label}
+                    </Text>
+                  </View>
+                );
+              })()}
               {task.progress && (
                 <View style={styles.progressContainer}>
                   <View style={styles.progressBar}>
@@ -329,15 +334,55 @@ function formatMinutes(mins: number): string {
   return m > 0 ? `${h}h ${m}m` : `${h}h`;
 }
 
-function formatDeadline(iso: string): string {
+type DeadlineInfo = { label: string; color: string; bgColor: string };
+
+function getDeadlineInfo(iso: string): DeadlineInfo {
   const due = new Date(iso);
   const now = new Date();
-  const hours = Math.round((due.getTime() - now.getTime()) / (1000 * 60 * 60));
-  if (hours < 0) return 'overdue';
-  if (hours < 1) return 'in less than an hour';
-  if (hours < 24) return `in ${hours}h`;
-  const days = Math.round(hours / 24);
-  return `in ${days} day${days === 1 ? '' : 's'}`;
+  const diffMs = due.getTime() - now.getTime();
+  const diffMin = Math.round(diffMs / (1000 * 60));
+  const diffHours = Math.round(diffMs / (1000 * 60 * 60));
+  const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+
+  // Overdue
+  if (diffMs < 0) {
+    const agoHours = Math.abs(diffHours);
+    const label = agoHours < 1 ? 'Due now' :
+      agoHours < 24 ? `Overdue by ${agoHours}h` :
+      `Overdue by ${Math.abs(diffDays)} day${Math.abs(diffDays) === 1 ? '' : 's'}`;
+    return { label, color: '#FCA5A5', bgColor: '#7F1D1D20' };
+  }
+
+  // Under 1 hour
+  if (diffMin < 60) {
+    const label = diffMin <= 1 ? 'Due now' : `Due in ${diffMin} min`;
+    return { label, color: '#FCA5A5', bgColor: '#7F1D1D20' };
+  }
+
+  // Under 3 hours
+  if (diffHours < 3) {
+    return { label: `Due in ${diffHours}h`, color: '#FBBF24', bgColor: '#78350F20' };
+  }
+
+  // Under 24 hours
+  if (diffHours < 24) {
+    return { label: `Due in ${diffHours} hours`, color: '#F59E0B', bgColor: '#78350F15' };
+  }
+
+  // Tomorrow
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  if (due.toDateString() === tomorrow.toDateString()) {
+    return { label: 'Due tomorrow', color: '#FCD34D', bgColor: '#78350F10' };
+  }
+
+  // Under 7 days
+  if (diffDays <= 7) {
+    return { label: `Due in ${diffDays} days`, color: '#94A3B8', bgColor: '#33415510' };
+  }
+
+  // More than a week
+  return { label: `Due in ${diffDays} days`, color: '#64748B', bgColor: '#33415508' };
 }
 
 const styles = StyleSheet.create({
@@ -353,7 +398,11 @@ const styles = StyleSheet.create({
   },
   cardTitle: { color: '#F8FAFC', fontSize: 26, fontWeight: '700', lineHeight: 34 },
   cardNotes: { color: '#94A3B8', fontSize: 15, marginTop: 10, lineHeight: 22 },
-  deadline: { color: '#F59E0B', fontSize: 13, fontWeight: '600', marginTop: 12 },
+  deadlineContainer: {
+    marginTop: 12, borderRadius: 8, paddingVertical: 6, paddingHorizontal: 10,
+    alignSelf: 'flex-start' as const,
+  },
+  deadlineText: { fontSize: 13, fontWeight: '600' },
   meta: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 16 },
   sessionLabel: { color: '#A5B4FC', fontSize: 13, fontWeight: '600', marginTop: 6 },
   progressContainer: { marginTop: 14 },
