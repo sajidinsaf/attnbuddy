@@ -66,3 +66,11 @@ export type NowResponse = {
   task: TaskResponse | null;
   pendingCount: number;
 };
+
+// Templates
+export type Template = {
+  id: string;
+  name: string;
+  category: string;
+  steps: string[];
+};

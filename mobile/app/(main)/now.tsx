@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 import { useFocusEffect, router } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { apiRequest } from '../../services/api';
-import { NowResponse, MicroStep } from '../../types/api';
+import { NowResponse, MicroStep, Template } from '../../types/api';
 
 export default function NowScreen() {
   const { token } = useAuth();
@@ -14,6 +14,9 @@ export default function NowScreen() {
   const [newStepTitle, setNewStepTitle] = useState('');
   const [addingStep, setAddingStep] = useState(false);
   const [showAddStep, setShowAddStep] = useState(false);
+  const [templates, setTemplates] = useState<Template[]>([]);
+  const [showTemplates, setShowTemplates] = useState(false);
+  const [applyingTemplate, setApplyingTemplate] = useState(false);
 
   const fetchNext = useCallback(async () => {
     if (!token) return;
@@ -67,6 +70,33 @@ export default function NowScreen() {
       Alert.alert('Error', e.message);
     } finally {
       setAddingStep(false);
+    }
+  };
+
+  const handleShowTemplates = async () => {
+    if (!token) return;
+    try {
+      const res = await apiRequest<Template[]>('/api/tasks/templates', { token });
+      setTemplates(res);
+      setShowTemplates(true);
+    } catch (e: any) {
+      Alert.alert('Error', e.message);
+    }
+  };
+
+  const handleApplyTemplate = async (templateId: string) => {
+    if (!data?.task || !token) return;
+    setApplyingTemplate(true);
+    try {
+      await apiRequest(`/api/tasks/${data.task.id}/apply-template?templateId=${templateId}`, {
+        method: 'POST', token,
+      });
+      setShowTemplates(false);
+      await fetchNext();
+    } catch (e: any) {
+      Alert.alert('Error', e.message);
+    } finally {
+      setApplyingTemplate(false);
     }
   };
 
@@ -164,10 +194,46 @@ export default function NowScreen() {
             )}
 
             {/* Add micro-step */}
-            {!showAddStep ? (
-              <TouchableOpacity style={styles.addStepBtn} onPress={() => setShowAddStep(true)}>
-                <Text style={styles.addStepText}>+ Break into steps</Text>
-              </TouchableOpacity>
+            {!showAddStep && !showTemplates ? (
+              <View style={styles.breakdownRow}>
+                <TouchableOpacity style={styles.addStepBtn} onPress={() => setShowAddStep(true)}>
+                  <Text style={styles.addStepText}>+ Add a step</Text>
+                </TouchableOpacity>
+                {!(task.microSteps && task.microSteps.length > 0) && (
+                  <TouchableOpacity style={styles.addStepBtn} onPress={handleShowTemplates}>
+                    <Text style={styles.templateBtnText}>Use a template</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            ) : showTemplates ? (
+              <View style={styles.templatePicker}>
+                <Text style={styles.templatePickerTitle}>Choose a template</Text>
+                <ScrollView style={styles.templateList} nestedScrollEnabled>
+                  {['academic', 'executive', 'professional'].map(category => {
+                    const catTemplates = templates.filter(t => t.category === category);
+                    if (catTemplates.length === 0) return null;
+                    return (
+                      <View key={category}>
+                        <Text style={styles.templateCategory}>{category.toUpperCase()}</Text>
+                        {catTemplates.map(t => (
+                          <TouchableOpacity
+                            key={t.id}
+                            style={styles.templateItem}
+                            onPress={() => handleApplyTemplate(t.id)}
+                            disabled={applyingTemplate}
+                          >
+                            <Text style={styles.templateName}>{t.name}</Text>
+                            <Text style={styles.templateStepCount}>{t.steps.length} steps</Text>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
+                    );
+                  })}
+                </ScrollView>
+                <TouchableOpacity onPress={() => setShowTemplates(false)}>
+                  <Text style={styles.addStepCancel}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
             ) : (
               <View style={styles.addStepForm}>
                 <TextInput
@@ -291,8 +357,17 @@ const styles = StyleSheet.create({
   stepCheckMark: { color: '#FFFFFF', fontSize: 12, fontWeight: '700' },
   stepTitle: { color: '#E2E8F0', fontSize: 15, flex: 1 },
   stepTitleDone: { color: '#64748B', textDecorationLine: 'line-through' },
-  addStepBtn: { marginTop: 12, paddingVertical: 10 },
+  breakdownRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 12 },
+  addStepBtn: { marginTop: 0, paddingVertical: 10 },
   addStepText: { color: '#6366F1', fontSize: 14, fontWeight: '600' },
+  templateBtnText: { color: '#A78BFA', fontSize: 14, fontWeight: '600' },
+  templatePicker: { marginTop: 12, backgroundColor: '#0F172A', borderRadius: 12, padding: 14 },
+  templatePickerTitle: { color: '#F8FAFC', fontSize: 15, fontWeight: '600', marginBottom: 10 },
+  templateList: { maxHeight: 200 },
+  templateCategory: { color: '#64748B', fontSize: 11, fontWeight: '700', letterSpacing: 1.5, marginTop: 10, marginBottom: 6 },
+  templateItem: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#1E293B' },
+  templateName: { color: '#E2E8F0', fontSize: 15 },
+  templateStepCount: { color: '#64748B', fontSize: 12 },
   addStepForm: { marginTop: 12 },
   addStepInput: {
     backgroundColor: '#1E293B', borderRadius: 10, padding: 12, color: '#F8FAFC', fontSize: 15,
