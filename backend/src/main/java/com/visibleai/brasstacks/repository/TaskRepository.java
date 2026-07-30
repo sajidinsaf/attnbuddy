@@ -42,4 +42,38 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Query("SELECT COALESCE(MAX(t.position), -1) FROM Task t WHERE t.parentTask.id = :parentId")
     int findMaxPositionByParentId(@Param("parentId") Long parentId);
+
+    // Nudge queries
+    @Query("""
+        SELECT t FROM Task t
+        WHERE t.user.id = :userId
+          AND t.status = 'PENDING'
+          AND t.parentTask IS NULL
+          AND t.dueDate IS NOT NULL
+          AND t.dueDate BETWEEN :now AND :horizon
+        ORDER BY t.dueDate ASC
+        """)
+    List<Task> findTasksWithDeadlineBetween(@Param("userId") Long userId,
+                                             @Param("now") Instant now,
+                                             @Param("horizon") Instant horizon);
+
+    @Query("""
+        SELECT t FROM Task t
+        WHERE t.user.id = :userId
+          AND t.status = 'PENDING'
+          AND t.parentTask IS NULL
+          AND t.createdAt < :staleThreshold
+        ORDER BY t.createdAt ASC
+        """)
+    List<Task> findStaleTasks(@Param("userId") Long userId, @Param("staleThreshold") Instant staleThreshold);
+
+    @Query("""
+        SELECT t FROM Task t
+        LEFT JOIN FETCH t.domain
+        WHERE t.user.id = :userId
+          AND t.status = 'PENDING'
+          AND t.parentTask IS NULL
+        ORDER BY t.createdAt ASC
+        """)
+    List<Task> findAllPendingForUser(@Param("userId") Long userId);
 }
