@@ -16,9 +16,11 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
         SELECT t FROM Task t
         LEFT JOIN FETCH t.domain
         WHERE t.user.id = :userId
-          AND t.status = 'PENDING'
           AND t.parentTask IS NULL
-          AND (t.snoozedUntil IS NULL OR t.snoozedUntil <= :now)
+          AND (
+            (t.status = 'PENDING' AND (t.snoozedUntil IS NULL OR t.snoozedUntil <= :now))
+            OR (t.status = 'SNOOZED' AND t.snoozedUntil <= :now)
+          )
         """)
     List<Task> findPendingTasksForUser(@Param("userId") Long userId, @Param("now") Instant now);
 

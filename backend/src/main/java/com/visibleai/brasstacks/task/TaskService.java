@@ -96,6 +96,14 @@ public class TaskService {
 
         List<Task> pending = taskRepository.findPendingTasksForUser(userId, Instant.now());
 
+        // Auto-unsnooze tasks whose snooze time has passed
+        for (Task task : pending) {
+            if (task.getStatus() == Task.Status.SNOOZED) {
+                task.unsnooze();
+                taskRepository.save(task);
+            }
+        }
+
         // Filter out sustained tasks that already have a completed session today
         LocalDate today = LocalDate.now(ZoneId.systemDefault());
         List<Task> eligible = new ArrayList<>();
@@ -166,6 +174,14 @@ public class TaskService {
     public TaskResponse snooze(Long userId, Long taskId, Instant until) {
         Task task = getTaskForUser(userId, taskId);
         task.snooze(until);
+        taskRepository.save(task);
+        return toResponse(task);
+    }
+
+    @Transactional
+    public TaskResponse unsnooze(Long userId, Long taskId) {
+        Task task = getTaskForUser(userId, taskId);
+        task.unsnooze();
         taskRepository.save(task);
         return toResponse(task);
     }

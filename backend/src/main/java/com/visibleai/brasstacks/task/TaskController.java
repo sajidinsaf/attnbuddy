@@ -50,6 +50,11 @@ public class TaskController {
         return taskService.snooze(getUserId(auth), id, request.until());
     }
 
+    @PostMapping("/{id}/unsnooze")
+    public TaskResponse unsnooze(Authentication auth, @PathVariable Long id) {
+        return taskService.unsnooze(getUserId(auth), id);
+    }
+
     @GetMapping
     public Page<TaskResponse> list(Authentication auth,
                                     @RequestParam(required = false) Task.Status status,
