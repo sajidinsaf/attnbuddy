@@ -6,6 +6,7 @@ function TabIcon({ name, focused }: { name: string; focused: boolean }) {
     now: '◉',
     capture: '+',
     tasks: '▤',
+    goals: '◎',
     history: '☰',
     settings: '⚙',
   };
@@ -62,11 +63,17 @@ export default function MainLayout() {
         }}
       />
       <Tabs.Screen
+        name="goals"
+        options={{
+          title: 'Goals',
+          headerTitle: 'Goals',
+          tabBarIcon: ({ focused }) => <TabIcon name="goals" focused={focused} />,
+        }}
+      />
+      <Tabs.Screen
         name="history"
         options={{
-          title: 'Done',
-          headerTitle: 'Completed',
-          tabBarIcon: ({ focused }) => <TabIcon name="history" focused={focused} />,
+          href: null, // Hidden from tab bar — accessible via Tasks > Done filter
         }}
       />
       <Tabs.Screen
