@@ -46,13 +46,13 @@ Brasstacks is a mobile app for people with ADHD that acts as an **executive func
 
 | ID | Requirement | Status |
 |----|-------------|--------|
-| P3-01 | App sends contextually intelligent push notifications (not dumb reminders) | Planned |
-| P3-02 | Morning briefing notification: "Your 3 priorities today" | Planned |
-| P3-03 | Deadline approaching notification | Planned |
-| P3-04 | Staleness notification: "You haven't touched X in 5 days" | Planned |
-| P3-05 | Gentle re-engagement: "One quick win for today: X" | Planned |
-| P3-06 | User can configure quiet hours (no nudges) | Planned |
-| P3-07 | User can set nudge frequency (eager / moderate / minimal) | Planned |
+| P3-01 | App sends contextually intelligent push notifications (not dumb reminders) | Done |
+| P3-02 | Morning briefing notification: "Your 3 priorities today" | Done |
+| P3-03 | Deadline approaching notification | Done |
+| P3-04 | Staleness notification: "You haven't touched X in 5 days" | Done |
+| P3-05 | Gentle re-engagement: "One quick win for today: X" | Done |
+| P3-06 | User can configure quiet hours (no nudges) | Done |
+| P3-07 | User can set nudge frequency (eager / moderate / minimal) | Done |
 
 ## Phase 4: Context Capture & Energy Patterns
 
