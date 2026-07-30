@@ -1,16 +1,19 @@
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert, TextInput, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useCallback, useState } from 'react';
 import { useFocusEffect, router } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { apiRequest } from '../../services/api';
-import { NowResponse } from '../../types/api';
+import { NowResponse, MicroStep } from '../../types/api';
 
 export default function NowScreen() {
   const { token } = useAuth();
   const [data, setData] = useState<NowResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [acting, setActing] = useState(false);
+  const [newStepTitle, setNewStepTitle] = useState('');
+  const [addingStep, setAddingStep] = useState(false);
+  const [showAddStep, setShowAddStep] = useState(false);
 
   const fetchNext = useCallback(async () => {
     if (!token) return;
@@ -41,6 +44,37 @@ export default function NowScreen() {
           method: 'POST', token,
         });
       }
+      await fetchNext();
+    } catch (e: any) {
+      Alert.alert('Error', e.message);
+    } finally {
+      setActing(false);
+    }
+  };
+
+  const handleAddMicroStep = async () => {
+    if (!data?.task || !token || !newStepTitle.trim()) return;
+    setAddingStep(true);
+    try {
+      await apiRequest('/api/tasks', {
+        method: 'POST', token,
+        body: { title: newStepTitle.trim(), parentTaskId: data.task.id },
+      });
+      setNewStepTitle('');
+      setShowAddStep(false);
+      await fetchNext();
+    } catch (e: any) {
+      Alert.alert('Error', e.message);
+    } finally {
+      setAddingStep(false);
+    }
+  };
+
+  const handleStepDone = async (stepId: number) => {
+    if (!token) return;
+    setActing(true);
+    try {
+      await apiRequest(`/api/tasks/${stepId}/done`, { method: 'POST', token });
       await fetchNext();
     } catch (e: any) {
       Alert.alert('Error', e.message);
@@ -104,6 +138,61 @@ export default function NowScreen() {
                 )}
               </View>
             </View>
+
+            {/* Micro-steps */}
+            {task.microSteps && task.microSteps.length > 0 && (
+              <View style={styles.stepsContainer}>
+                <Text style={styles.stepsHeader}>
+                  Steps ({task.microSteps.filter(s => s.status === 'DONE').length}/{task.microSteps.length})
+                </Text>
+                {task.microSteps.map((step) => (
+                  <TouchableOpacity
+                    key={step.id}
+                    style={styles.stepRow}
+                    onPress={() => step.status !== 'DONE' && handleStepDone(step.id)}
+                    disabled={acting || step.status === 'DONE'}
+                  >
+                    <View style={[styles.stepCheck, step.status === 'DONE' && styles.stepCheckDone]}>
+                      {step.status === 'DONE' && <Text style={styles.stepCheckMark}>✓</Text>}
+                    </View>
+                    <Text style={[styles.stepTitle, step.status === 'DONE' && styles.stepTitleDone]}>
+                      {step.title}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+
+            {/* Add micro-step */}
+            {!showAddStep ? (
+              <TouchableOpacity style={styles.addStepBtn} onPress={() => setShowAddStep(true)}>
+                <Text style={styles.addStepText}>+ Break into steps</Text>
+              </TouchableOpacity>
+            ) : (
+              <View style={styles.addStepForm}>
+                <TextInput
+                  style={styles.addStepInput}
+                  placeholder="Quick step (< 2 min)..."
+                  placeholderTextColor="#64748B"
+                  value={newStepTitle}
+                  onChangeText={setNewStepTitle}
+                  onSubmitEditing={handleAddMicroStep}
+                  autoFocus
+                />
+                <View style={styles.addStepActions}>
+                  <TouchableOpacity
+                    style={styles.addStepConfirm}
+                    onPress={handleAddMicroStep}
+                    disabled={addingStep || !newStepTitle.trim()}
+                  >
+                    <Text style={styles.addStepConfirmText}>{addingStep ? '...' : 'Add'}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => { setShowAddStep(false); setNewStepTitle(''); }}>
+                    <Text style={styles.addStepCancel}>Cancel</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
 
             <View style={styles.actions}>
               <TouchableOpacity
@@ -191,6 +280,28 @@ const styles = StyleSheet.create({
   progressText: { color: '#64748B', fontSize: 12, marginTop: 6 },
   quadrant: { color: '#64748B', fontSize: 13 },
   score: { color: '#475569', fontSize: 12 },
+  stepsContainer: { marginTop: 16, backgroundColor: '#0F172A', borderRadius: 12, padding: 14 },
+  stepsHeader: { color: '#94A3B8', fontSize: 12, fontWeight: '600', letterSpacing: 1, marginBottom: 10 },
+  stepRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 8 },
+  stepCheck: {
+    width: 22, height: 22, borderRadius: 11, borderWidth: 2, borderColor: '#475569',
+    alignItems: 'center', justifyContent: 'center', marginRight: 12,
+  },
+  stepCheckDone: { backgroundColor: '#22C55E', borderColor: '#22C55E' },
+  stepCheckMark: { color: '#FFFFFF', fontSize: 12, fontWeight: '700' },
+  stepTitle: { color: '#E2E8F0', fontSize: 15, flex: 1 },
+  stepTitleDone: { color: '#64748B', textDecorationLine: 'line-through' },
+  addStepBtn: { marginTop: 12, paddingVertical: 10 },
+  addStepText: { color: '#6366F1', fontSize: 14, fontWeight: '600' },
+  addStepForm: { marginTop: 12 },
+  addStepInput: {
+    backgroundColor: '#1E293B', borderRadius: 10, padding: 12, color: '#F8FAFC', fontSize: 15,
+    borderWidth: 1, borderColor: '#334155',
+  },
+  addStepActions: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 10 },
+  addStepConfirm: { backgroundColor: '#6366F1', borderRadius: 8, paddingVertical: 8, paddingHorizontal: 16 },
+  addStepConfirmText: { color: '#FFFFFF', fontSize: 14, fontWeight: '600' },
+  addStepCancel: { color: '#64748B', fontSize: 14 },
   actions: { flexDirection: 'row', gap: 10, marginTop: 24 },
   actionBtn: { flex: 1, borderRadius: 14, paddingVertical: 16, alignItems: 'center' },
   doneBtn: { backgroundColor: '#22C55E' },

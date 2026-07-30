@@ -17,6 +17,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
         LEFT JOIN FETCH t.domain
         WHERE t.user.id = :userId
           AND t.status = 'PENDING'
+          AND t.parentTask IS NULL
           AND (t.snoozedUntil IS NULL OR t.snoozedUntil <= :now)
         """)
     List<Task> findPendingTasksForUser(@Param("userId") Long userId, @Param("now") Instant now);
@@ -26,4 +27,17 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     Page<Task> findByUserId(Long userId, Pageable pageable);
 
     long countByUserIdAndStatus(Long userId, Task.Status status);
+
+    @Query("""
+        SELECT t FROM Task t
+        WHERE t.parentTask.id = :parentId
+        ORDER BY t.position ASC, t.id ASC
+        """)
+    List<Task> findMicroStepsByParentId(@Param("parentId") Long parentId);
+
+    @Query("SELECT COUNT(t) FROM Task t WHERE t.parentTask.id = :parentId AND t.status <> 'DONE'")
+    long countIncompleteMicroSteps(@Param("parentId") Long parentId);
+
+    @Query("SELECT COALESCE(MAX(t.position), -1) FROM Task t WHERE t.parentTask.id = :parentId")
+    int findMaxPositionByParentId(@Param("parentId") Long parentId);
 }

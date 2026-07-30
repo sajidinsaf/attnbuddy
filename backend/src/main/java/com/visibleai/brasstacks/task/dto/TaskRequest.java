@@ -13,5 +13,6 @@ public record TaskRequest(
         Instant dueDate,
         Task.TaskType taskType,
         Integer dailyEffortMinutes,
-        Instant targetDate
+        Instant targetDate,
+        Long parentTaskId
 ) {}

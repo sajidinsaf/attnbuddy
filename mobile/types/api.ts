@@ -32,6 +32,13 @@ export type SustainedProgress = {
   percentComplete: number;
 };
 
+export type MicroStep = {
+  id: number;
+  title: string;
+  status: TaskStatus;
+  position: number;
+};
+
 export type TaskResponse = {
   id: number;
   title: string;
@@ -51,6 +58,8 @@ export type TaskResponse = {
   dailyEffortMinutes: number | null;
   targetDate: string | null;
   progress: SustainedProgress | null;
+  parentTaskId: number | null;
+  microSteps: MicroStep[] | null;
 };
 
 export type NowResponse = {

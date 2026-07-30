@@ -2,6 +2,8 @@ package com.visibleai.brasstacks.model;
 
 import jakarta.persistence.*;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "task", indexes = {
@@ -23,6 +25,17 @@ public class Task {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "domain_id")
     private LifeDomain domain;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_task_id")
+    private Task parentTask;
+
+    @OneToMany(mappedBy = "parentTask", fetch = FetchType.LAZY)
+    @OrderBy("position ASC, id ASC")
+    private List<Task> microSteps = new ArrayList<>();
+
+    @Column(nullable = false)
+    private int position = 0;
 
     @Column(nullable = false, length = 500)
     private String title;
@@ -135,4 +148,12 @@ public class Task {
     public Instant getTargetDate() { return targetDate; }
 
     public boolean isSustained() { return taskType == TaskType.SUSTAINED; }
+    public boolean isMicroStep() { return parentTask != null; }
+
+    // Micro-step getters/setters
+    public Task getParentTask() { return parentTask; }
+    public void setParentTask(Task parentTask) { this.parentTask = parentTask; }
+    public List<Task> getMicroSteps() { return microSteps; }
+    public int getPosition() { return position; }
+    public void setPosition(int position) { this.position = position; }
 }

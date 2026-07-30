@@ -50,6 +50,17 @@ public class TaskService {
             task.setDomain(domain);
         }
 
+        // Micro-step setup
+        if (request.parentTaskId() != null) {
+            Task parent = getTaskForUser(userId, request.parentTaskId());
+            task.setParentTask(parent);
+            task.setPosition(taskRepository.findMaxPositionByParentId(parent.getId()) + 1);
+            // Inherit domain and urgency/importance from parent
+            task.setDomain(parent.getDomain());
+            task.setUrgency(parent.getUrgency());
+            task.setImportance(parent.getImportance());
+        }
+
         // Sustained task setup
         Task.TaskType type = request.taskType() != null ? request.taskType() : Task.TaskType.ONE_TIME;
         task.setTaskType(type);
@@ -123,7 +134,20 @@ public class TaskService {
             taskRepository.save(task);
         }
 
+        // Auto-complete parent if all micro-steps are now done
+        if (task.isMicroStep()) {
+            autoCompleteParentIfAllDone(task.getParentTask());
+        }
+
         return toResponse(task);
+    }
+
+    private void autoCompleteParentIfAllDone(Task parent) {
+        long incomplete = taskRepository.countIncompleteMicroSteps(parent.getId());
+        if (incomplete == 0) {
+            parent.markDone();
+            taskRepository.save(parent);
+        }
     }
 
     @Transactional
@@ -140,6 +164,13 @@ public class TaskService {
         task.snooze(until);
         taskRepository.save(task);
         return toResponse(task);
+    }
+
+    public List<TaskResponse.MicroStepResponse> getMicroSteps(Long userId, Long taskId) {
+        getTaskForUser(userId, taskId); // verify ownership
+        return taskRepository.findMicroStepsByParentId(taskId).stream()
+                .map(s -> new TaskResponse.MicroStepResponse(s.getId(), s.getTitle(), s.getStatus(), s.getPosition()))
+                .toList();
     }
 
     public Page<TaskResponse> listTasks(Long userId, Task.Status status, Pageable pageable) {
@@ -186,7 +217,18 @@ public class TaskService {
             double percent = estimatedTotal > 0 ? Math.min(100.0, (totalMinutes * 100.0) / estimatedTotal) : 0;
             progress = new TaskResponse.SustainedProgress(completedSessions, totalMinutes, estimatedTotal, percent);
         }
-        return TaskResponse.from(task, score, progress);
+
+        List<TaskResponse.MicroStepResponse> microSteps = null;
+        if (!task.isMicroStep()) {
+            List<Task> steps = taskRepository.findMicroStepsByParentId(task.getId());
+            if (!steps.isEmpty()) {
+                microSteps = steps.stream()
+                        .map(s -> new TaskResponse.MicroStepResponse(s.getId(), s.getTitle(), s.getStatus(), s.getPosition()))
+                        .toList();
+            }
+        }
+
+        return TaskResponse.from(task, score, progress, microSteps);
     }
 
     private int estimateTotalMinutes(Task task) {
