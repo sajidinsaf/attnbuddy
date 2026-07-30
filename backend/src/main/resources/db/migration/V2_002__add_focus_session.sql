@@ -9,7 +9,7 @@ CREATE TABLE focus_session (
     started_at TIMESTAMP NOT NULL,
     ended_at TIMESTAMP,
     CONSTRAINT fk_focus_task FOREIGN KEY (task_id) REFERENCES task(id) ON DELETE CASCADE,
-    CONSTRAINT fk_focus_user FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
+    CONSTRAINT fk_focus_user FOREIGN KEY (user_id) REFERENCES app_user(id) ON DELETE CASCADE
 );
 
 CREATE INDEX idx_focus_user_date ON focus_session(user_id, started_at);

@@ -10,7 +10,12 @@ public class BrasstacksApplication extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(BrasstacksApplication.class);
+        return application
+                .properties(
+                    "spring.profiles.active=prod",
+                    "spring.config.additional-location=optional:file:/home/ifaru02/brasstacks/"
+                )
+                .sources(BrasstacksApplication.class);
     }
 
     public static void main(String[] args) {

@@ -25,6 +25,7 @@ out/
 .env.*
 .dev.vars
 *.env.local
+backend/deploy/
 
 # Claude Code
 .claude/settings.local.json
