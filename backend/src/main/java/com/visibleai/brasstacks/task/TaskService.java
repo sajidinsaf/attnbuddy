@@ -223,10 +223,11 @@ public class TaskService {
         ));
     }
 
+    @Transactional(readOnly = true)
     public Page<TaskResponse> listTasks(Long userId, Task.Status status, Pageable pageable) {
         Page<Task> tasks = status != null
-                ? taskRepository.findByUserIdAndStatus(userId, status, pageable)
-                : taskRepository.findByUserId(userId, pageable);
+                ? taskRepository.findByUserIdAndStatusAndParentTaskIsNull(userId, status, pageable)
+                : taskRepository.findByUserIdAndParentTaskIsNull(userId, pageable);
         return tasks.map(this::toResponse);
     }
 

@@ -24,9 +24,9 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
         """)
     List<Task> findPendingTasksForUser(@Param("userId") Long userId, @Param("now") Instant now);
 
-    Page<Task> findByUserIdAndStatus(Long userId, Task.Status status, Pageable pageable);
+    Page<Task> findByUserIdAndStatusAndParentTaskIsNull(Long userId, Task.Status status, Pageable pageable);
 
-    Page<Task> findByUserId(Long userId, Pageable pageable);
+    Page<Task> findByUserIdAndParentTaskIsNull(Long userId, Pageable pageable);
 
     long countByUserIdAndStatus(Long userId, Task.Status status);
 

@@ -35,8 +35,8 @@ export default function TasksScreen() {
       setTasks(prev => append ? [...prev, ...res.content] : res.content);
       setIsLast(res.last);
       setPage(res.number);
-    } catch {
-      // Silently fail
+    } catch (e: any) {
+      console.error('Tasks fetch failed:', e.message);
     }
   }, [token]);
 
