@@ -2,6 +2,7 @@ package com.visibleai.brasstacks.model;
 
 import jakarta.persistence.*;
 import java.time.Instant;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "app_user")
@@ -30,8 +31,22 @@ public class User {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "nudge_frequency", nullable = false)
+    private NudgeFrequency nudgeFrequency = NudgeFrequency.MODERATE;
+
+    @Column(name = "quiet_start", length = 5)
+    private String quietStart;
+
+    @Column(name = "quiet_end", length = 5)
+    private String quietEnd;
+
     public enum Profile {
         EXECUTIVE, PROFESSIONAL, STUDENT
+    }
+
+    public enum NudgeFrequency {
+        EAGER, MODERATE, MINIMAL
     }
 
     protected User() {}
@@ -64,4 +79,23 @@ public class User {
 
     public void setDisplayName(String displayName) { this.displayName = displayName; }
     public void setProfile(Profile profile) { this.profile = profile; }
+
+    public NudgeFrequency getNudgeFrequency() { return nudgeFrequency; }
+    public void setNudgeFrequency(NudgeFrequency nudgeFrequency) { this.nudgeFrequency = nudgeFrequency; }
+    public String getQuietStart() { return quietStart; }
+    public void setQuietStart(String quietStart) { this.quietStart = quietStart; }
+    public String getQuietEnd() { return quietEnd; }
+    public void setQuietEnd(String quietEnd) { this.quietEnd = quietEnd; }
+
+    public boolean isInQuietHours() {
+        if (quietStart == null || quietEnd == null) return false;
+        LocalTime now = LocalTime.now();
+        LocalTime start = LocalTime.parse(quietStart);
+        LocalTime end = LocalTime.parse(quietEnd);
+        if (start.isBefore(end)) {
+            return !now.isBefore(start) && now.isBefore(end);
+        }
+        // Wraps midnight (e.g., 22:00 - 07:00)
+        return !now.isBefore(start) || now.isBefore(end);
+    }
 }

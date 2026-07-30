@@ -26,6 +26,16 @@ public class PrioritizationEngine {
                 .max(Comparator.comparingInt(ScoredTask::score));
     }
 
+    public List<Task> topN(List<Task> tasks, int n) {
+        Instant now = Instant.now();
+        LocalTime currentTime = LocalTime.now(ZoneId.systemDefault());
+
+        return tasks.stream()
+                .sorted((a, b) -> calculateScore(b, now, currentTime) - calculateScore(a, now, currentTime))
+                .limit(n)
+                .toList();
+    }
+
     public int calculateScore(Task task, Instant now, LocalTime currentTime) {
         int score = eisenhowerBase(task);
         score += deadlineBonus(task, now);

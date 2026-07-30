@@ -6,16 +6,59 @@ import { useAuth } from '../../contexts/AuthContext';
 import { apiRequest } from '../../services/api';
 import { Domain } from '../../types/api';
 
+type NudgeFrequency = 'EAGER' | 'MODERATE' | 'MINIMAL';
+type NudgeSettings = { nudgeFrequency: string; quietStart: string | null; quietEnd: string | null };
+
+const QUIET_PRESETS = [
+  { label: 'Off', start: null, end: null },
+  { label: '10pm–7am', start: '22:00', end: '07:00' },
+  { label: '11pm–8am', start: '23:00', end: '08:00' },
+  { label: '9pm–6am', start: '21:00', end: '06:00' },
+];
+
 export default function SettingsScreen() {
   const { token, logout } = useAuth();
   const [domains, setDomains] = useState<Domain[]>([]);
+  const [nudgeFrequency, setNudgeFrequency] = useState<NudgeFrequency>('MODERATE');
+  const [quietStart, setQuietStart] = useState<string | null>(null);
+  const [quietEnd, setQuietEnd] = useState<string | null>(null);
 
   useFocusEffect(useCallback(() => {
     if (!token) return;
     apiRequest<Domain[]>('/api/domains', { token })
       .then(setDomains)
       .catch(() => {});
+    apiRequest<NudgeSettings>('/api/settings/nudges', { token })
+      .then(s => {
+        setNudgeFrequency(s.nudgeFrequency as NudgeFrequency);
+        setQuietStart(s.quietStart);
+        setQuietEnd(s.quietEnd);
+      })
+      .catch(() => {});
   }, [token]));
+
+  const saveNudgeSettings = async (freq: NudgeFrequency, qStart: string | null, qEnd: string | null) => {
+    if (!token) return;
+    try {
+      await apiRequest('/api/settings/nudges', {
+        method: 'PUT', token,
+        body: { nudgeFrequency: freq, quietStart: qStart, quietEnd: qEnd },
+      });
+    } catch (e: any) {
+      Alert.alert('Error', e.message);
+    }
+  };
+
+  const handleFrequencyChange = (freq: NudgeFrequency) => {
+    setNudgeFrequency(freq);
+    saveNudgeSettings(freq, quietStart, quietEnd);
+  };
+
+  const handleQuietChange = (start: string | null, end: string | null) => {
+    setQuietStart(start);
+    setQuietEnd(end);
+    saveNudgeSettings(nudgeFrequency, start, end);
+  };
 
   const handleLogout = () => {
     Alert.alert('Sign Out', 'Are you sure?', [
@@ -56,6 +99,47 @@ export default function SettingsScreen() {
         </View>
 
         <View style={styles.section}>
+          <Text style={styles.sectionTitle}>NUDGE FREQUENCY</Text>
+          <View style={styles.chipRow}>
+            {(['EAGER', 'MODERATE', 'MINIMAL'] as NudgeFrequency[]).map(f => (
+              <TouchableOpacity
+                key={f}
+                style={[styles.chip, nudgeFrequency === f && styles.chipActive]}
+                onPress={() => handleFrequencyChange(f)}
+              >
+                <Text style={[styles.chipText, nudgeFrequency === f && styles.chipTextActive]}>
+                  {f.charAt(0) + f.slice(1).toLowerCase()}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <Text style={styles.chipHint}>
+            {nudgeFrequency === 'EAGER' ? 'More frequent nudges and reminders' :
+             nudgeFrequency === 'MINIMAL' ? 'Only urgent deadline reminders' :
+             'Balanced nudges for deadlines and stale tasks'}
+          </Text>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>QUIET HOURS</Text>
+          <View style={styles.chipRow}>
+            {QUIET_PRESETS.map(p => {
+              const isActive = p.start === quietStart && p.end === quietEnd;
+              return (
+                <TouchableOpacity
+                  key={p.label}
+                  style={[styles.chip, isActive && styles.chipActive]}
+                  onPress={() => handleQuietChange(p.start, p.end)}
+                >
+                  <Text style={[styles.chipText, isActive && styles.chipTextActive]}>{p.label}</Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+          <Text style={styles.chipHint}>No nudges during quiet hours</Text>
+        </View>
+
+        <View style={styles.section}>
           <Text style={styles.sectionTitle}>ABOUT</Text>
           <View style={styles.aboutCard}>
             <Text style={styles.aboutText}>Brasstacks v1.0.0</Text>
@@ -89,6 +173,15 @@ const styles = StyleSheet.create({
   domainWeight: { color: '#64748B', fontSize: 13 },
   domainHours: { color: '#64748B', fontSize: 13 },
   emptyText: { color: '#475569', fontSize: 14 },
+  chipRow: { flexDirection: 'row', gap: 8, flexWrap: 'wrap' },
+  chip: {
+    paddingVertical: 8, paddingHorizontal: 16, borderRadius: 16,
+    backgroundColor: '#1E293B', borderWidth: 1, borderColor: '#334155',
+  },
+  chipActive: { backgroundColor: '#6366F1', borderColor: '#6366F1' },
+  chipText: { color: '#94A3B8', fontSize: 14, fontWeight: '600' },
+  chipTextActive: { color: '#FFFFFF' },
+  chipHint: { color: '#475569', fontSize: 12, marginTop: 8 },
   aboutCard: {
     backgroundColor: '#1E293B', borderRadius: 12, padding: 16,
     borderWidth: 1, borderColor: '#334155',
