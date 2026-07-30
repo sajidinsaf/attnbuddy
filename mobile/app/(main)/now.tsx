@@ -19,8 +19,9 @@ export default function NowScreen() {
   const [showTemplates, setShowTemplates] = useState(false);
   const [applyingTemplate, setApplyingTemplate] = useState(false);
   const [focusMode, setFocusMode] = useState(false);
-  const [pendingAction, setPendingAction] = useState<'skip' | 'snooze' | null>(null);
+  const [pendingAction, setPendingAction] = useState<'done' | 'skip' | 'snooze' | null>(null);
   const [breadcrumb, setBreadcrumb] = useState('');
+  const [selectedEnergy, setSelectedEnergy] = useState<string | null>(null);
 
   const fetchNext = useCallback(async () => {
     if (!token) return;
@@ -39,6 +40,10 @@ export default function NowScreen() {
 
   const handleAction = async (action: 'done' | 'skip' | 'snooze') => {
     if (!data?.task || !token) return;
+    if (action === 'done' && !pendingAction) {
+      setPendingAction('done');
+      return;
+    }
     if ((action === 'skip' || action === 'snooze') && !pendingAction) {
       setPendingAction(action);
       return;
@@ -55,12 +60,13 @@ export default function NowScreen() {
           method: 'POST', token, body: { context: breadcrumb || undefined },
         });
       } else {
-        await apiRequest(`/api/tasks/${data.task.id}/${action}`, {
-          method: 'POST', token,
+        await apiRequest(`/api/tasks/${data.task.id}/done`, {
+          method: 'POST', token, body: { energyLevel: selectedEnergy || undefined },
         });
       }
       setPendingAction(null);
       setBreadcrumb('');
+      setSelectedEnergy(null);
       await fetchNext();
     } catch (e: any) {
       Alert.alert('Error', e.message);
@@ -292,7 +298,38 @@ export default function NowScreen() {
               </View>
             )}
 
-            {pendingAction && (
+            {pendingAction === 'done' && (
+              <View style={styles.energyCapture}>
+                <Text style={styles.breadcrumbCaptureLabel}>How's your energy? (optional)</Text>
+                <View style={styles.energyRow}>
+                  {(['HIGH', 'MEDIUM', 'LOW'] as const).map(level => (
+                    <TouchableOpacity
+                      key={level}
+                      style={[styles.energyChip, selectedEnergy === level && styles.energyChipActive]}
+                      onPress={() => setSelectedEnergy(selectedEnergy === level ? null : level)}
+                    >
+                      <Text style={[styles.energyChipText, selectedEnergy === level && styles.energyChipTextActive]}>
+                        {level === 'HIGH' ? 'High' : level === 'MEDIUM' ? 'Medium' : 'Low'}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+                <View style={styles.breadcrumbActions}>
+                  <TouchableOpacity
+                    style={styles.breadcrumbConfirm}
+                    onPress={() => handleAction('done')}
+                    disabled={acting}
+                  >
+                    <Text style={styles.breadcrumbConfirmText}>{acting ? '...' : 'Done'}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => { setPendingAction(null); setSelectedEnergy(null); }}>
+                    <Text style={styles.addStepCancel}>Cancel</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
+
+            {(pendingAction === 'skip' || pendingAction === 'snooze') && (
               <View style={styles.breadcrumbCapture}>
                 <Text style={styles.breadcrumbCaptureLabel}>
                   Where are you leaving off? (optional)
@@ -495,6 +532,15 @@ const styles = StyleSheet.create({
   breadcrumb: { backgroundColor: '#0F172A', borderRadius: 8, padding: 10, marginTop: 10 },
   breadcrumbLabel: { color: '#6366F1', fontSize: 11, fontWeight: '700', letterSpacing: 1 },
   breadcrumbText: { color: '#E2E8F0', fontSize: 14, marginTop: 4 },
+  energyCapture: { marginTop: 16 },
+  energyRow: { flexDirection: 'row', gap: 10, marginTop: 8 },
+  energyChip: {
+    flex: 1, paddingVertical: 10, borderRadius: 10, alignItems: 'center',
+    backgroundColor: '#1E293B', borderWidth: 1, borderColor: '#334155',
+  },
+  energyChipActive: { backgroundColor: '#6366F1', borderColor: '#6366F1' },
+  energyChipText: { color: '#94A3B8', fontSize: 14, fontWeight: '600' },
+  energyChipTextActive: { color: '#FFFFFF' },
   breadcrumbCapture: { marginTop: 16 },
   breadcrumbCaptureLabel: { color: '#94A3B8', fontSize: 13, marginBottom: 8 },
   breadcrumbInput: {

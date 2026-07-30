@@ -74,6 +74,13 @@ public class Task {
     @Column(name = "last_context", columnDefinition = "TEXT")
     private String lastContext;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "energy_level", length = 10)
+    private EnergyLevel energyLevel;
+
+    @Column(name = "completed_hour")
+    private Integer completedHour;
+
     @Column(name = "skip_count", nullable = false)
     private int skipCount = 0;
 
@@ -87,6 +94,7 @@ public class Task {
     public enum Urgency { URGENT, NOT_URGENT }
     public enum Importance { IMPORTANT, NOT_IMPORTANT }
     public enum Status { PENDING, DONE, SKIPPED, SNOOZED }
+    public enum EnergyLevel { HIGH, MEDIUM, LOW }
 
     protected Task() {}
 
@@ -103,6 +111,7 @@ public class Task {
     public void markDone() {
         this.status = Status.DONE;
         this.completedAt = Instant.now();
+        this.completedHour = java.time.LocalTime.now().getHour();
     }
 
     public void skip() {
@@ -152,6 +161,9 @@ public class Task {
 
     public String getLastContext() { return lastContext; }
     public void setLastContext(String lastContext) { this.lastContext = lastContext; }
+    public EnergyLevel getEnergyLevel() { return energyLevel; }
+    public void setEnergyLevel(EnergyLevel energyLevel) { this.energyLevel = energyLevel; }
+    public Integer getCompletedHour() { return completedHour; }
 
     public boolean isSustained() { return taskType == TaskType.SUSTAINED; }
     public boolean isMicroStep() { return parentTask != null; }

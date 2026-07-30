@@ -125,8 +125,11 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskResponse markDone(Long userId, Long taskId) {
+    public TaskResponse markDone(Long userId, Long taskId, Task.EnergyLevel energyLevel) {
         Task task = getTaskForUser(userId, taskId);
+        if (energyLevel != null) {
+            task.setEnergyLevel(energyLevel);
+        }
 
         if (task.isSustained()) {
             // Mark today's session as done, not the whole task

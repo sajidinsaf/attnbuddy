@@ -22,7 +22,7 @@ class PrioritizationEngineTest {
 
     @BeforeEach
     void setUp() {
-        engine = new PrioritizationEngine();
+        engine = new PrioritizationEngine(null);
         testUser = new User("test@example.com", "hash", "Test", User.Profile.EXECUTIVE);
     }
 

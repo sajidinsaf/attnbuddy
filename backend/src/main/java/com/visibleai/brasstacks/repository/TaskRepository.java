@@ -43,6 +43,21 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query("SELECT COALESCE(MAX(t.position), -1) FROM Task t WHERE t.parentTask.id = :parentId")
     int findMaxPositionByParentId(@Param("parentId") Long parentId);
 
+    // Energy pattern query: find the user's most productive hours
+    @Query("""
+        SELECT t.completedHour, COUNT(t) FROM Task t
+        WHERE t.user.id = :userId
+          AND t.status = 'DONE'
+          AND t.completedHour IS NOT NULL
+          AND t.completedAt > :since
+        GROUP BY t.completedHour
+        ORDER BY COUNT(t) DESC
+        """)
+    List<Object[]> findCompletionPatternByHour(@Param("userId") Long userId, @Param("since") Instant since);
+
+    @Query("SELECT COUNT(t) FROM Task t WHERE t.user.id = :userId AND t.status = 'DONE' AND t.completedAt > :since")
+    long countCompletedSince(@Param("userId") Long userId, @Param("since") Instant since);
+
     // Nudge queries
     @Query("""
         SELECT t FROM Task t

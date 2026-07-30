@@ -2,48 +2,89 @@ package com.visibleai.brasstacks.task;
 
 import com.visibleai.brasstacks.model.LifeDomain;
 import com.visibleai.brasstacks.model.Task;
+import com.visibleai.brasstacks.repository.TaskRepository;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public class PrioritizationEngine {
+
+    private final TaskRepository taskRepository;
+
+    public PrioritizationEngine(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
+    }
 
     public record ScoredTask(Task task, int score) {}
 
     public Optional<ScoredTask> pickNext(List<Task> pendingTasks) {
         Instant now = Instant.now();
         LocalTime currentTime = LocalTime.now(ZoneId.systemDefault());
+        Set<Integer> peakHours = Collections.emptySet();
 
+        if (!pendingTasks.isEmpty()) {
+            Long userId = pendingTasks.get(0).getUser().getId();
+            peakHours = getPeakHours(userId);
+        }
+
+        Set<Integer> finalPeakHours = peakHours;
         return pendingTasks.stream()
-                .map(task -> new ScoredTask(task, calculateScore(task, now, currentTime)))
+                .map(task -> new ScoredTask(task, calculateScore(task, now, currentTime, finalPeakHours)))
                 .max(Comparator.comparingInt(ScoredTask::score));
     }
 
     public List<Task> topN(List<Task> tasks, int n) {
         Instant now = Instant.now();
         LocalTime currentTime = LocalTime.now(ZoneId.systemDefault());
+        Set<Integer> peakHours = Collections.emptySet();
 
+        if (!tasks.isEmpty()) {
+            Long userId = tasks.get(0).getUser().getId();
+            peakHours = getPeakHours(userId);
+        }
+
+        Set<Integer> finalPeakHours = peakHours;
         return tasks.stream()
-                .sorted((a, b) -> calculateScore(b, now, currentTime) - calculateScore(a, now, currentTime))
+                .sorted((a, b) -> calculateScore(b, now, currentTime, finalPeakHours)
+                        - calculateScore(a, now, currentTime, finalPeakHours))
                 .limit(n)
                 .toList();
     }
 
-    public int calculateScore(Task task, Instant now, LocalTime currentTime) {
+    public int calculateScore(Task task, Instant now, LocalTime currentTime, Set<Integer> peakHours) {
         int score = eisenhowerBase(task);
         score += deadlineBonus(task, now);
         score += stalenessBonus(task, now);
         score += domainWeight(task);
         score += domainTimeMatch(task, currentTime);
+        score += energyPatternBonus(currentTime, peakHours);
         score -= skipPenalty(task);
         return score;
+    }
+
+    private Set<Integer> getPeakHours(Long userId) {
+        if (taskRepository == null) return Collections.emptySet();
+        Instant twoWeeksAgo = Instant.now().minus(Duration.ofDays(14));
+        long completedCount = taskRepository.countCompletedSince(userId, twoWeeksAgo);
+        if (completedCount < 10) return Collections.emptySet(); // not enough data
+
+        List<Object[]> patterns = taskRepository.findCompletionPatternByHour(userId, twoWeeksAgo);
+        Set<Integer> peak = new HashSet<>();
+        // Top 3 most productive hours
+        for (int i = 0; i < Math.min(3, patterns.size()); i++) {
+            peak.add(((Number) patterns.get(i)[0]).intValue());
+        }
+        return peak;
+    }
+
+    private int energyPatternBonus(LocalTime currentTime, Set<Integer> peakHours) {
+        if (peakHours.isEmpty()) return 0;
+        return peakHours.contains(currentTime.getHour()) ? 15 : 0;
     }
 
     private int eisenhowerBase(Task task) {
