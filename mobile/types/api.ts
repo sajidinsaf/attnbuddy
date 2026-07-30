@@ -60,6 +60,7 @@ export type TaskResponse = {
   progress: SustainedProgress | null;
   parentTaskId: number | null;
   microSteps: MicroStep[] | null;
+  lastContext: string | null;
 };
 
 export type NowResponse = {

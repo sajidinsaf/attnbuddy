@@ -19,6 +19,8 @@ export default function NowScreen() {
   const [showTemplates, setShowTemplates] = useState(false);
   const [applyingTemplate, setApplyingTemplate] = useState(false);
   const [focusMode, setFocusMode] = useState(false);
+  const [pendingAction, setPendingAction] = useState<'skip' | 'snooze' | null>(null);
+  const [breadcrumb, setBreadcrumb] = useState('');
 
   const fetchNext = useCallback(async () => {
     if (!token) return;
@@ -37,18 +39,28 @@ export default function NowScreen() {
 
   const handleAction = async (action: 'done' | 'skip' | 'snooze') => {
     if (!data?.task || !token) return;
+    if ((action === 'skip' || action === 'snooze') && !pendingAction) {
+      setPendingAction(action);
+      return;
+    }
     setActing(true);
     try {
       if (action === 'snooze') {
-        const until = new Date(Date.now() + 60 * 60 * 1000).toISOString(); // 1 hour
+        const until = new Date(Date.now() + 60 * 60 * 1000).toISOString();
         await apiRequest(`/api/tasks/${data.task.id}/snooze`, {
-          method: 'POST', token, body: { until },
+          method: 'POST', token, body: { until, context: breadcrumb || undefined },
+        });
+      } else if (action === 'skip') {
+        await apiRequest(`/api/tasks/${data.task.id}/skip`, {
+          method: 'POST', token, body: { context: breadcrumb || undefined },
         });
       } else {
         await apiRequest(`/api/tasks/${data.task.id}/${action}`, {
           method: 'POST', token,
         });
       }
+      setPendingAction(null);
+      setBreadcrumb('');
       await fetchNext();
     } catch (e: any) {
       Alert.alert('Error', e.message);
@@ -150,6 +162,12 @@ export default function NowScreen() {
                 <Text style={styles.sessionLabel}>
                   Today's session — {task.dailyEffortMinutes >= 60 ? `${task.dailyEffortMinutes / 60}h` : `${task.dailyEffortMinutes}m`}
                 </Text>
+              )}
+              {task.lastContext && (
+                <View style={styles.breadcrumb}>
+                  <Text style={styles.breadcrumbLabel}>Where you left off:</Text>
+                  <Text style={styles.breadcrumbText}>{task.lastContext}</Text>
+                </View>
               )}
               {task.notes && <Text style={styles.cardNotes}>{task.notes}</Text>}
               {task.dueDate && (() => {
@@ -274,12 +292,44 @@ export default function NowScreen() {
               </View>
             )}
 
-            <TouchableOpacity
-              style={styles.focusBtn}
-              onPress={() => setFocusMode(true)}
-            >
-              <Text style={styles.focusBtnText}>Start Focus Session</Text>
-            </TouchableOpacity>
+            {pendingAction && (
+              <View style={styles.breadcrumbCapture}>
+                <Text style={styles.breadcrumbCaptureLabel}>
+                  Where are you leaving off? (optional)
+                </Text>
+                <TextInput
+                  style={styles.breadcrumbInput}
+                  placeholder="e.g. Halfway through section 2..."
+                  placeholderTextColor="#64748B"
+                  value={breadcrumb}
+                  onChangeText={setBreadcrumb}
+                  autoFocus
+                />
+                <View style={styles.breadcrumbActions}>
+                  <TouchableOpacity
+                    style={styles.breadcrumbConfirm}
+                    onPress={() => handleAction(pendingAction)}
+                    disabled={acting}
+                  >
+                    <Text style={styles.breadcrumbConfirmText}>
+                      {acting ? '...' : pendingAction === 'skip' ? 'Skip' : 'Snooze'}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => { setPendingAction(null); setBreadcrumb(''); }}>
+                    <Text style={styles.addStepCancel}>Cancel</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
+
+            {!pendingAction && (
+              <TouchableOpacity
+                style={styles.focusBtn}
+                onPress={() => setFocusMode(true)}
+              >
+                <Text style={styles.focusBtnText}>Start Focus Session</Text>
+              </TouchableOpacity>
+            )}
 
             <View style={styles.actions}>
               <TouchableOpacity
@@ -442,6 +492,18 @@ const styles = StyleSheet.create({
   addStepConfirm: { backgroundColor: '#6366F1', borderRadius: 8, paddingVertical: 8, paddingHorizontal: 16 },
   addStepConfirmText: { color: '#FFFFFF', fontSize: 14, fontWeight: '600' },
   addStepCancel: { color: '#64748B', fontSize: 14 },
+  breadcrumb: { backgroundColor: '#0F172A', borderRadius: 8, padding: 10, marginTop: 10 },
+  breadcrumbLabel: { color: '#6366F1', fontSize: 11, fontWeight: '700', letterSpacing: 1 },
+  breadcrumbText: { color: '#E2E8F0', fontSize: 14, marginTop: 4 },
+  breadcrumbCapture: { marginTop: 16 },
+  breadcrumbCaptureLabel: { color: '#94A3B8', fontSize: 13, marginBottom: 8 },
+  breadcrumbInput: {
+    backgroundColor: '#1E293B', borderRadius: 10, padding: 12, color: '#F8FAFC', fontSize: 15,
+    borderWidth: 1, borderColor: '#334155',
+  },
+  breadcrumbActions: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 10 },
+  breadcrumbConfirm: { backgroundColor: '#6366F1', borderRadius: 8, paddingVertical: 8, paddingHorizontal: 16 },
+  breadcrumbConfirmText: { color: '#FFFFFF', fontSize: 14, fontWeight: '600' },
   focusBtn: {
     backgroundColor: '#4F46E5', borderRadius: 14, paddingVertical: 14,
     alignItems: 'center', marginTop: 16,
