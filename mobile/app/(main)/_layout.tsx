@@ -5,6 +5,7 @@ function TabIcon({ name, focused }: { name: string; focused: boolean }) {
   const icons: Record<string, string> = {
     now: '◉',
     capture: '+',
+    history: '☰',
     settings: '⚙',
   };
   return (
@@ -49,6 +50,14 @@ export default function MainLayout() {
           title: 'Capture',
           headerTitle: 'Quick Capture',
           tabBarIcon: ({ focused }) => <TabIcon name="capture" focused={focused} />,
+        }}
+      />
+      <Tabs.Screen
+        name="history"
+        options={{
+          title: 'Done',
+          headerTitle: 'Completed',
+          tabBarIcon: ({ focused }) => <TabIcon name="history" focused={focused} />,
         }}
       />
       <Tabs.Screen
