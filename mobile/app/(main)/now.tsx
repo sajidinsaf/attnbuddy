@@ -5,6 +5,7 @@ import { useFocusEffect, router } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { apiRequest } from '../../services/api';
 import { NowResponse, MicroStep, Template } from '../../types/api';
+import FocusTimer from '../../components/FocusTimer';
 
 export default function NowScreen() {
   const { token } = useAuth();
@@ -17,6 +18,7 @@ export default function NowScreen() {
   const [templates, setTemplates] = useState<Template[]>([]);
   const [showTemplates, setShowTemplates] = useState(false);
   const [applyingTemplate, setApplyingTemplate] = useState(false);
+  const [focusMode, setFocusMode] = useState(false);
 
   const fetchNext = useCallback(async () => {
     if (!token) return;
@@ -128,7 +130,14 @@ export default function NowScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <View style={styles.content}>
-        {task ? (
+        {task && focusMode ? (
+          <FocusTimer
+            taskId={task.id}
+            token={token!}
+            onComplete={() => { setFocusMode(false); fetchNext(); }}
+            onCancel={() => setFocusMode(false)}
+          />
+        ) : task ? (
           <>
             <View style={[styles.card, task.domainColor ? { borderLeftColor: task.domainColor, borderLeftWidth: 4 } : {}]}>
               {task.domainName && (
@@ -260,6 +269,13 @@ export default function NowScreen() {
               </View>
             )}
 
+            <TouchableOpacity
+              style={styles.focusBtn}
+              onPress={() => setFocusMode(true)}
+            >
+              <Text style={styles.focusBtnText}>Start Focus Session</Text>
+            </TouchableOpacity>
+
             <View style={styles.actions}>
               <TouchableOpacity
                 style={[styles.actionBtn, styles.doneBtn]}
@@ -377,7 +393,12 @@ const styles = StyleSheet.create({
   addStepConfirm: { backgroundColor: '#6366F1', borderRadius: 8, paddingVertical: 8, paddingHorizontal: 16 },
   addStepConfirmText: { color: '#FFFFFF', fontSize: 14, fontWeight: '600' },
   addStepCancel: { color: '#64748B', fontSize: 14 },
-  actions: { flexDirection: 'row', gap: 10, marginTop: 24 },
+  focusBtn: {
+    backgroundColor: '#4F46E5', borderRadius: 14, paddingVertical: 14,
+    alignItems: 'center', marginTop: 16,
+  },
+  focusBtnText: { color: '#FFFFFF', fontSize: 15, fontWeight: '600' },
+  actions: { flexDirection: 'row', gap: 10, marginTop: 12 },
   actionBtn: { flex: 1, borderRadius: 14, paddingVertical: 16, alignItems: 'center' },
   doneBtn: { backgroundColor: '#22C55E' },
   skipBtn: { backgroundColor: '#334155' },
