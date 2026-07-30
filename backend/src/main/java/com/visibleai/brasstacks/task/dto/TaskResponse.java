@@ -2,6 +2,7 @@ package com.visibleai.brasstacks.task.dto;
 
 import com.visibleai.brasstacks.model.Task;
 import java.time.Instant;
+import java.util.List;
 
 public record TaskResponse(
         Long id, String title, String notes,
@@ -12,18 +13,23 @@ public record TaskResponse(
         Integer score,
         Task.TaskType taskType,
         Integer dailyEffortMinutes, Instant targetDate,
-        SustainedProgress progress
+        SustainedProgress progress,
+        Long parentTaskId,
+        List<MicroStepResponse> microSteps
 ) {
     public record SustainedProgress(
             int completedSessions, int totalMinutesLogged,
             int estimatedTotalMinutes, double percentComplete
     ) {}
 
+    public record MicroStepResponse(Long id, String title, Task.Status status, int position) {}
+
     public static TaskResponse from(Task t) {
-        return from(t, null, null);
+        return from(t, null, null, null);
     }
 
-    public static TaskResponse from(Task t, Integer score, SustainedProgress progress) {
+    public static TaskResponse from(Task t, Integer score, SustainedProgress progress,
+                                     List<MicroStepResponse> microSteps) {
         return new TaskResponse(
                 t.getId(), t.getTitle(), t.getNotes(),
                 t.getUrgency(), t.getImportance(),
@@ -35,7 +41,9 @@ public record TaskResponse(
                 score,
                 t.getTaskType(),
                 t.getDailyEffortMinutes(), t.getTargetDate(),
-                progress
+                progress,
+                t.getParentTask() != null ? t.getParentTask().getId() : null,
+                microSteps
         );
     }
 }

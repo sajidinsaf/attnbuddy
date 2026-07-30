@@ -54,6 +54,11 @@ public class TaskController {
         return taskService.listTasks(getUserId(auth), status, pageable);
     }
 
+    @GetMapping("/{id}/microsteps")
+    public java.util.List<TaskResponse.MicroStepResponse> microSteps(Authentication auth, @PathVariable Long id) {
+        return taskService.getMicroSteps(getUserId(auth), id);
+    }
+
     private Long getUserId(Authentication auth) {
         return (Long) auth.getCredentials();
     }
