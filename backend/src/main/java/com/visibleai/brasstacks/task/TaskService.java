@@ -3,6 +3,7 @@ package com.visibleai.brasstacks.task;
 import com.visibleai.brasstacks.model.*;
 import com.visibleai.brasstacks.repository.*;
 import com.visibleai.brasstacks.task.dto.*;
+import com.visibleai.brasstacks.repository.FocusSessionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,15 +23,18 @@ public class TaskService {
     private final UserRepository userRepository;
     private final LifeDomainRepository domainRepository;
     private final DailySessionRepository sessionRepository;
+    private final FocusSessionRepository focusSessionRepository;
     private final PrioritizationEngine prioritizationEngine;
 
     public TaskService(TaskRepository taskRepository, UserRepository userRepository,
                        LifeDomainRepository domainRepository, DailySessionRepository sessionRepository,
+                       FocusSessionRepository focusSessionRepository,
                        PrioritizationEngine prioritizationEngine) {
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
         this.domainRepository = domainRepository;
         this.sessionRepository = sessionRepository;
+        this.focusSessionRepository = focusSessionRepository;
         this.prioritizationEngine = prioritizationEngine;
     }
 
@@ -191,6 +195,16 @@ public class TaskService {
             created.add(new TaskResponse.MicroStepResponse(step.getId(), step.getTitle(), step.getStatus(), step.getPosition()));
         }
         return created;
+    }
+
+    @Transactional
+    public void logFocusSession(Long userId, Long taskId, FocusSessionRequest request) {
+        Task task = getTaskForUser(userId, taskId);
+        User user = userRepository.getReferenceById(userId);
+        focusSessionRepository.save(new FocusSession(
+                task, user, request.durationMinutes(), request.actualMinutes(),
+                request.completed(), request.startedAt()
+        ));
     }
 
     public Page<TaskResponse> listTasks(Long userId, Task.Status status, Pageable pageable) {

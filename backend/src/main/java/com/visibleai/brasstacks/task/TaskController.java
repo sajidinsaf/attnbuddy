@@ -57,6 +57,13 @@ public class TaskController {
         return taskService.listTasks(getUserId(auth), status, pageable);
     }
 
+    @PostMapping("/{id}/focus")
+    public ResponseEntity<Void> logFocus(Authentication auth, @PathVariable Long id,
+                                          @Valid @RequestBody FocusSessionRequest request) {
+        taskService.logFocusSession(getUserId(auth), id, request);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/{id}/microsteps")
     public java.util.List<TaskResponse.MicroStepResponse> microSteps(Authentication auth, @PathVariable Long id) {
         return taskService.getMicroSteps(getUserId(auth), id);
