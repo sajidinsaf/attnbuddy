@@ -12,7 +12,7 @@ class JwtUtilTest {
     @BeforeEach
     void setUp() {
         jwtUtil = new JwtUtil(
-                "attnbuddy-test-secret-must-be-at-least-256-bits-long-for-hmac-sha256!!",
+                "brasstacks-test-secret-must-be-at-least-256-bits-long-for-hmac-sha256!",
                 3600000L,   // 1 hour access token
                 2592000000L // 30 day refresh token
         );
@@ -55,7 +55,7 @@ class JwtUtilTest {
     @Test
     void isValid_returnsFalseForExpiredToken() {
         JwtUtil shortLivedJwt = new JwtUtil(
-                "attnbuddy-test-secret-must-be-at-least-256-bits-long-for-hmac-sha256!!",
+                "brasstacks-test-secret-must-be-at-least-256-bits-long-for-hmac-sha256!",
                 -1000L, // already expired
                 -1000L
         );
