@@ -1,4 +1,4 @@
-# AttnBuddy — Privacy Architecture
+# Brasstacks — Privacy Architecture
 
 ## Core Principle
 
@@ -6,7 +6,7 @@
 
 ## Why This Matters
 
-AttnBuddy is a focus and productivity support app used by people with ADHD. Users will enter:
+Brasstacks is a focus and productivity support app used by people with ADHD. Users will enter:
 - Task descriptions that reveal personal, professional, and academic activities
 - Emotional state data (rescue mode, energy levels)
 - Daily patterns and routines

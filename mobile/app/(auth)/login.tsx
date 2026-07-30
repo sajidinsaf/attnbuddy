@@ -30,7 +30,7 @@ export default function LoginScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>AttnBuddy</Text>
+        <Text style={styles.title}>Brasstacks</Text>
         <Text style={styles.subtitle}>Your focus companion</Text>
 
         <View style={styles.form}>

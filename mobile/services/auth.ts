@@ -1,7 +1,7 @@
 import * as SecureStore from 'expo-secure-store';
 
-const ACCESS_TOKEN_KEY = 'attnbuddy_access_token';
-const REFRESH_TOKEN_KEY = 'attnbuddy_refresh_token';
+const ACCESS_TOKEN_KEY = 'brasstacks_access_token';
+const REFRESH_TOKEN_KEY = 'brasstacks_refresh_token';
 
 export async function saveTokens(accessToken: string, refreshToken: string): Promise<void> {
   await SecureStore.setItemAsync(ACCESS_TOKEN_KEY, accessToken);

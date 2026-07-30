@@ -1,6 +1,6 @@
 // Use your PC's local IP — localhost won't work from a physical device
 const DEV_API_URL = 'http://192.168.1.62:8080';
-const PROD_API_URL = 'https://attnbuddy.visibleai.com';
+const PROD_API_URL = 'https://brasstacks.visibleai.com';
 
 const API_URL = __DEV__ ? DEV_API_URL : PROD_API_URL;
 
