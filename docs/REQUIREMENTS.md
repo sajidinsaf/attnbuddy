@@ -20,27 +20,27 @@ Brasstacks is a mobile app for people with ADHD that acts as an **executive func
 
 | ID | Requirement | Status |
 |----|-------------|--------|
-| P1-01 | User can register with email, password, name, and context (executive/professional/student) | Planned |
-| P1-02 | User can log in and receive JWT access + refresh tokens | Planned |
-| P1-03 | User sees a single "Right Now" screen showing ONE task — not a list | Planned |
-| P1-04 | User can quick-capture a task with title and Eisenhower classification (urgency + importance) | Planned |
-| P1-05 | App automatically selects the highest-priority pending task using Eisenhower scoring + deadline proximity + staleness | Planned |
-| P1-06 | User can mark a task as Done, Skip, or Snooze from the Right Now screen | Planned |
-| P1-07 | Snoozed tasks are hidden until the snooze time expires | Planned |
-| P1-08 | Skipped tasks receive a temporary score penalty and rotate to the next task | Planned |
-| P1-09 | Context-specific task templates are seeded on registration (executive, student, professional) | Planned |
+| P1-01 | User can register with email, password, name, and context (executive/professional/student) | Done |
+| P1-02 | User can log in and receive JWT access + refresh tokens | Done |
+| P1-03 | User sees a single "Right Now" screen showing ONE task — not a list | Done |
+| P1-04 | User can quick-capture a task with title and Eisenhower classification (urgency + importance) | Done |
+| P1-05 | App automatically selects the highest-priority pending task using Eisenhower scoring + deadline proximity + staleness | Done |
+| P1-06 | User can mark a task as Done, Skip, or Snooze from the Right Now screen | Done |
+| P1-07 | Snoozed tasks are hidden until the snooze time expires | Done |
+| P1-08 | Skipped tasks receive a temporary score penalty and rotate to the next task | Done |
+| P1-09 | Context-specific task templates are seeded on registration (executive, student, professional) | Done |
 
 ## Phase 2: Time Perception & Task Decomposition
 
 | ID | Requirement | Status |
 |----|-------------|--------|
-| P2-01 | User can start a time-boxed focus session with a visual countdown timer | Planned |
-| P2-02 | User receives a transition warning at 80% of the time-box duration | Planned |
-| P2-03 | User can break a task into micro-steps (< 2 min each) | Planned |
-| P2-04 | User can apply pre-built decomposition templates (academic: essay, exam, homework, presentation; executive: board prep, quarterly review, hiring, strategic planning) | Planned |
-| P2-05 | Right Now screen shows deadline countdown ("Due in 3 hours") | Planned |
-| P2-06 | User can view a simple history of completed tasks (momentum evidence) | Planned |
-| P2-07 | Parent task auto-completes when all micro-steps are done | Planned |
+| P2-01 | User can start a time-boxed focus session with a visual countdown timer | Done |
+| P2-02 | User receives a transition warning at 80% of the time-box duration | Done |
+| P2-03 | User can break a task into micro-steps (< 2 min each) | Done |
+| P2-04 | User can apply pre-built decomposition templates (academic: essay, exam, homework, presentation; executive: board prep, quarterly review, hiring, strategic planning) | Done |
+| P2-05 | Right Now screen shows deadline countdown ("Due in 3 hours") | Done |
+| P2-06 | User can view a simple history of completed tasks (momentum evidence) | Done |
+| P2-07 | Parent task auto-completes when all micro-steps are done | Done |
 
 ## Phase 3: Active Nudging & Push Notifications
 
