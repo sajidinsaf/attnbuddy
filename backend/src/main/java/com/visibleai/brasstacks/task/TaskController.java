@@ -2,6 +2,7 @@ package com.visibleai.brasstacks.task;
 
 import com.visibleai.brasstacks.model.Task;
 import com.visibleai.brasstacks.task.dto.*;
+import com.visibleai.brasstacks.task.dto.TemplateResponse;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.*;
 public class TaskController {
 
     private final TaskService taskService;
+    private final TemplateService templateService;
 
-    public TaskController(TaskService taskService) {
+    public TaskController(TaskService taskService, TemplateService templateService) {
         this.taskService = taskService;
+        this.templateService = templateService;
     }
 
     @PostMapping
@@ -57,6 +60,22 @@ public class TaskController {
     @GetMapping("/{id}/microsteps")
     public java.util.List<TaskResponse.MicroStepResponse> microSteps(Authentication auth, @PathVariable Long id) {
         return taskService.getMicroSteps(getUserId(auth), id);
+    }
+
+    @GetMapping("/templates")
+    public java.util.List<TemplateResponse> templates(@RequestParam(required = false) String category) {
+        if (category != null) {
+            return templateService.listByCategory(category);
+        }
+        return templateService.listTemplates();
+    }
+
+    @PostMapping("/{id}/apply-template")
+    public java.util.List<TaskResponse.MicroStepResponse> applyTemplate(
+            Authentication auth, @PathVariable Long id, @RequestParam String templateId) {
+        var template = templateService.getTemplate(templateId)
+                .orElseThrow(() -> new IllegalArgumentException("Template not found: " + templateId));
+        return taskService.applyTemplate(getUserId(auth), id, template.steps());
     }
 
     private Long getUserId(Authentication auth) {

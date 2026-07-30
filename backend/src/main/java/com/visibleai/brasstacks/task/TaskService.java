@@ -173,6 +173,26 @@ public class TaskService {
                 .toList();
     }
 
+    @Transactional
+    public List<TaskResponse.MicroStepResponse> applyTemplate(Long userId, Long taskId, List<String> stepTitles) {
+        Task parent = getTaskForUser(userId, taskId);
+        User user = parent.getUser();
+        int position = taskRepository.findMaxPositionByParentId(parent.getId()) + 1;
+
+        List<TaskResponse.MicroStepResponse> created = new ArrayList<>();
+        for (String title : stepTitles) {
+            Task step = new Task(user, title);
+            step.setParentTask(parent);
+            step.setPosition(position++);
+            step.setDomain(parent.getDomain());
+            step.setUrgency(parent.getUrgency());
+            step.setImportance(parent.getImportance());
+            step = taskRepository.save(step);
+            created.add(new TaskResponse.MicroStepResponse(step.getId(), step.getTitle(), step.getStatus(), step.getPosition()));
+        }
+        return created;
+    }
+
     public Page<TaskResponse> listTasks(Long userId, Task.Status status, Pageable pageable) {
         Page<Task> tasks = status != null
                 ? taskRepository.findByUserIdAndStatus(userId, status, pageable)
