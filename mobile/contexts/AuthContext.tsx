@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { apiRequest, ApiError } from '../services/api';
 import { getAccessToken, getRefreshToken, saveTokens, clearTokens } from '../services/auth';
+import { registerForPushNotifications } from '../services/notifications';
 import { AuthResponse, Profile } from '../types/api';
 
 type AuthState = {
@@ -42,6 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             if (res.refreshToken) {
               await saveTokens(res.accessToken, res.refreshToken);
             }
+            registerForPushNotifications(res.accessToken);
           } catch {
             // Refresh failed — clear and go to login
             await clearTokens();
@@ -62,6 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(res.accessToken);
     setUserId(res.userId);
     await saveTokens(res.accessToken, res.refreshToken!);
+    registerForPushNotifications(res.accessToken);
   }
 
   async function register(email: string, password: string, displayName: string, profile: Profile) {
@@ -72,6 +75,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(res.accessToken);
     setUserId(res.userId);
     await saveTokens(res.accessToken, res.refreshToken!);
+    registerForPushNotifications(res.accessToken);
   }
 
   async function logout() {
