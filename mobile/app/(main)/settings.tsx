@@ -58,7 +58,7 @@ export default function SettingsScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>ABOUT</Text>
           <View style={styles.aboutCard}>
-            <Text style={styles.aboutText}>AttnBuddy v1.0.0</Text>
+            <Text style={styles.aboutText}>Brasstacks v1.0.0</Text>
             <Text style={styles.aboutSubtext}>Your focus companion</Text>
           </View>
         </View>

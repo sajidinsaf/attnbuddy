@@ -1,4 +1,4 @@
-# AttnBuddy — Design Decisions
+# Brasstacks — Design Decisions
 
 This document records non-obvious architectural and product decisions with the reasoning behind each.
 

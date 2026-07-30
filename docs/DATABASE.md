@@ -1,4 +1,4 @@
-# AttnBuddy — Database Schema
+# Brasstacks — Database Schema
 
 ## Phase 1 Tables
 

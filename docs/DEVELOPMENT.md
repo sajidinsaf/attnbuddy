@@ -1,4 +1,4 @@
-# AttnBuddy — Development Guide
+# Brasstacks — Development Guide
 
 ## Prerequisites
 
@@ -18,9 +18,9 @@
 ## Project Structure
 
 ```
-attnbuddy/
+brasstacks/
 ├── backend/                  # Spring Boot REST API
-│   ├── src/main/java/com/visibleai/attnbuddy/
+│   ├── src/main/java/com/visibleai/brasstacks/
 │   │   ├── config/           # Security, JWT, CORS configuration
 │   │   ├── auth/             # Authentication (register, login, refresh)
 │   │   ├── task/             # Task CRUD + PrioritizationEngine
@@ -48,7 +48,7 @@ attnbuddy/
 
 ```bash
 # 1. Create MySQL database
-mysql -u root -p -e "CREATE DATABASE attnbuddy;"
+mysql -u root -p -e "CREATE DATABASE brasstacks;"
 
 # 2. Configure connection (copy and edit)
 cp backend/src/main/resources/application-local.properties.example \
@@ -102,7 +102,7 @@ API endpoint: `https://api.visibleai.com`
 
 ### Backend (application-local.properties)
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/attnbuddy
+spring.datasource.url=jdbc:mysql://localhost:3306/brasstacks
 spring.datasource.username=your_username
 spring.datasource.password=your_password
 jwt.secret=your-256-bit-secret

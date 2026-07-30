@@ -1,18 +1,18 @@
 {
   "expo": {
-    "name": "AttnBuddy",
-    "slug": "attnbuddy",
+    "name": "Brasstacks",
+    "slug": "brasstacks",
     "version": "1.0.0",
     "orientation": "portrait",
-    "scheme": "attnbuddy",
+    "scheme": "brasstacks",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.visibleai.attnbuddy"
+      "bundleIdentifier": "com.visibleai.brasstacks"
     },
     "android": {
-      "package": "com.visibleai.attnbuddy",
+      "package": "com.visibleai.brasstacks",
       "adaptiveIcon": {
         "backgroundColor": "#0F172A"
       }

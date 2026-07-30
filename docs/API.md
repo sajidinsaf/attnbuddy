@@ -1,4 +1,4 @@
-# AttnBuddy — REST API Reference
+# Brasstacks — REST API Reference
 
 Base URL: `https://api.visibleai.com`
 

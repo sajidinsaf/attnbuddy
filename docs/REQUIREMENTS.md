@@ -1,8 +1,8 @@
-# AttnBuddy — Requirements
+# Brasstacks — Requirements
 
 ## Product Vision
 
-AttnBuddy is a mobile app for people with ADHD that acts as an **executive function prosthetic**. Unlike traditional to-do lists and planners (which require the very executive functions ADHD impairs), AttnBuddy actively manages the user through tasks — deciding what to do next, nudging at the right time, and adapting to individual patterns.
+Brasstacks is a mobile app for people with ADHD that acts as an **executive function prosthetic**. Unlike traditional to-do lists and planners (which require the very executive functions ADHD impairs), Brasstacks actively manages the user through tasks — deciding what to do next, nudging at the right time, and adapting to individual patterns.
 
 **Positioning**: Productivity and focus support app. NOT a medical device or therapeutic tool.
 
