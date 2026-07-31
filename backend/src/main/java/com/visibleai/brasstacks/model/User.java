@@ -41,12 +41,20 @@ public class User {
     @Column(name = "quiet_end", length = 5)
     private String quietEnd;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tone", nullable = false)
+    private Tone tone = Tone.SUPPORTIVE;
+
     public enum Profile {
         EXECUTIVE, PROFESSIONAL, STUDENT
     }
 
     public enum NudgeFrequency {
         EAGER, MODERATE, MINIMAL
+    }
+
+    public enum Tone {
+        SUPPORTIVE, PEER, PLAYFUL
     }
 
     protected User() {}
@@ -86,6 +94,8 @@ public class User {
     public void setQuietStart(String quietStart) { this.quietStart = quietStart; }
     public String getQuietEnd() { return quietEnd; }
     public void setQuietEnd(String quietEnd) { this.quietEnd = quietEnd; }
+    public Tone getTone() { return tone; }
+    public void setTone(Tone tone) { this.tone = tone; }
 
     public boolean isInQuietHours() {
         if (quietStart == null || quietEnd == null) return false;

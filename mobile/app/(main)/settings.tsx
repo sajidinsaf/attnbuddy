@@ -7,6 +7,7 @@ import { apiRequest } from '../../services/api';
 import { Domain } from '../../types/api';
 
 type NudgeFrequency = 'EAGER' | 'MODERATE' | 'MINIMAL';
+type Tone = 'SUPPORTIVE' | 'PEER' | 'PLAYFUL';
 type NudgeSettings = { nudgeFrequency: string; quietStart: string | null; quietEnd: string | null };
 
 const QUIET_PRESETS = [
@@ -22,6 +23,7 @@ export default function SettingsScreen() {
   const [nudgeFrequency, setNudgeFrequency] = useState<NudgeFrequency>('MODERATE');
   const [quietStart, setQuietStart] = useState<string | null>(null);
   const [quietEnd, setQuietEnd] = useState<string | null>(null);
+  const [tone, setTone] = useState<Tone>('SUPPORTIVE');
 
   useFocusEffect(useCallback(() => {
     if (!token) return;
@@ -34,6 +36,9 @@ export default function SettingsScreen() {
         setQuietStart(s.quietStart);
         setQuietEnd(s.quietEnd);
       })
+      .catch(() => {});
+    apiRequest<{ tone: string }>('/api/settings/tone', { token })
+      .then(s => setTone(s.tone as Tone))
       .catch(() => {});
   }, [token]));
 
@@ -58,6 +63,16 @@ export default function SettingsScreen() {
     setQuietStart(start);
     setQuietEnd(end);
     saveNudgeSettings(nudgeFrequency, start, end);
+  };
+
+  const handleToneChange = async (t: Tone) => {
+    setTone(t);
+    if (!token) return;
+    try {
+      await apiRequest('/api/settings/tone', { method: 'PUT', token, body: { tone: t } });
+    } catch (e: any) {
+      Alert.alert('Error', e.message);
+    }
   };
 
   const handleLogout = () => {
@@ -137,6 +152,28 @@ export default function SettingsScreen() {
             })}
           </View>
           <Text style={styles.chipHint}>No nudges during quiet hours</Text>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>APP TONE</Text>
+          <View style={styles.chipRow}>
+            {(['SUPPORTIVE', 'PEER', 'PLAYFUL'] as Tone[]).map(t => (
+              <TouchableOpacity
+                key={t}
+                style={[styles.chip, tone === t && styles.chipActive]}
+                onPress={() => handleToneChange(t)}
+              >
+                <Text style={[styles.chipText, tone === t && styles.chipTextActive]}>
+                  {t.charAt(0) + t.slice(1).toLowerCase()}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <Text style={styles.chipHint}>
+            {tone === 'SUPPORTIVE' ? 'Warm and encouraging' :
+             tone === 'PLAYFUL' ? 'Light and fun' :
+             'Direct and matter-of-fact'}
+          </Text>
         </View>
 
         <View style={styles.section}>

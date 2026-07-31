@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert, TextInput, ScrollView, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert, TextInput, ScrollView, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback, Vibration } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useCallback, useState } from 'react';
 import { useFocusEffect, router } from 'expo-router';
@@ -6,6 +6,20 @@ import { useAuth } from '../../contexts/AuthContext';
 import { apiRequest } from '../../services/api';
 import { NowResponse, MicroStep, Template } from '../../types/api';
 import FocusTimer from '../../components/FocusTimer';
+import RescueMode from '../../components/RescueMode';
+
+const CELEBRATIONS = [
+  "Nice work!",
+  "One down. You're moving.",
+  "That's progress.",
+  "Look at you go.",
+  "Done and dusted.",
+  "Momentum.",
+  "Knocked it out.",
+  "One less thing.",
+  "Solid.",
+  "You showed up. That matters.",
+];
 
 export default function NowScreen() {
   const { token } = useAuth();
@@ -19,6 +33,8 @@ export default function NowScreen() {
   const [showTemplates, setShowTemplates] = useState(false);
   const [applyingTemplate, setApplyingTemplate] = useState(false);
   const [focusMode, setFocusMode] = useState(false);
+  const [rescueMode, setRescueMode] = useState(false);
+  const [celebration, setCelebration] = useState<string | null>(null);
   const [pendingAction, setPendingAction] = useState<'done' | 'skip' | 'snooze' | null>(null);
   const [breadcrumb, setBreadcrumb] = useState('');
   const [selectedEnergy, setSelectedEnergy] = useState<string | null>(null);
@@ -63,6 +79,11 @@ export default function NowScreen() {
         await apiRequest(`/api/tasks/${data.task.id}/done`, {
           method: 'POST', token, body: { energyLevel: selectedEnergy || undefined },
         });
+        // Show celebration
+        const msg = CELEBRATIONS[Math.floor(Math.random() * CELEBRATIONS.length)];
+        setCelebration(msg);
+        Vibration.vibrate([0, 50, 50, 50]);
+        setTimeout(() => setCelebration(null), 2000);
       }
       setPendingAction(null);
       setBreadcrumb('');
@@ -154,7 +175,13 @@ export default function NowScreen() {
       >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        {task && focusMode ? (
+        {task && rescueMode ? (
+          <RescueMode
+            onMicroSession={() => { setRescueMode(false); setFocusMode(true); }}
+            onPark={() => { setRescueMode(false); setPendingAction('snooze'); }}
+            onClose={() => setRescueMode(false)}
+          />
+        ) : task && focusMode ? (
           <FocusTimer
             taskId={task.id}
             token={token!}
@@ -403,6 +430,10 @@ export default function NowScreen() {
             {data && data.pendingCount > 1 && (
               <Text style={styles.pending}>{data.pendingCount - 1} more tasks waiting</Text>
             )}
+
+            <TouchableOpacity style={styles.rescueBtn} onPress={() => setRescueMode(true)}>
+              <Text style={styles.rescueBtnText}>I'm overwhelmed</Text>
+            </TouchableOpacity>
           </>
         ) : (
           <View style={styles.emptyCard}>
@@ -418,6 +449,12 @@ export default function NowScreen() {
       </ScrollView>
       </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
+
+      {celebration && (
+        <View style={styles.celebrationOverlay}>
+          <Text style={styles.celebrationText}>{celebration}</Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 }
@@ -570,6 +607,13 @@ const styles = StyleSheet.create({
   snoozeBtn: { backgroundColor: '#1E293B', borderWidth: 1, borderColor: '#334155' },
   actionText: { color: '#FFFFFF', fontSize: 15, fontWeight: '600' },
   pending: { color: '#475569', fontSize: 13, textAlign: 'center', marginTop: 20 },
+  rescueBtn: { marginTop: 20, paddingVertical: 12, alignItems: 'center' },
+  rescueBtnText: { color: '#475569', fontSize: 14 },
+  celebrationOverlay: {
+    position: 'absolute', top: '40%', left: 20, right: 20,
+    backgroundColor: '#22C55E', borderRadius: 16, paddingVertical: 20, alignItems: 'center',
+  },
+  celebrationText: { color: '#FFFFFF', fontSize: 20, fontWeight: '700' },
   emptyCard: {
     backgroundColor: '#1E293B', borderRadius: 20, padding: 32,
     borderWidth: 1, borderColor: '#334155', alignItems: 'center',
