@@ -9,7 +9,11 @@
     "userInterfaceStyle": "dark",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.visibleai.brasstacks"
+      "bundleIdentifier": "com.visibleai.brasstacks",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Not used — Brasstacks does not access your camera.",
+        "UIBackgroundModes": ["remote-notification"]
+      }
     },
     "android": {
       "package": "com.visibleai.brasstacks",
@@ -23,7 +27,13 @@
     },
     "plugins": [
       "expo-router",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-notifications",
+        {
+          "sounds": []
+        }
+      ]
     ],
     "extra": {
       "router": {},
