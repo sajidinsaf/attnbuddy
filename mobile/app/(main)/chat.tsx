@@ -16,7 +16,7 @@ const WELCOME_MESSAGE: Message = {
   content: "Hi! I'm your Brasstacks assistant. Ask me anything — about your tasks, how features work, or what to focus on. For example:\n\n" +
     "\"What tasks do I have?\"\n" +
     "\"What did I finish this week?\"\n" +
-    "\"How does body doubling work?\"\n" +
+    "\"How does focus companion work?\"\n" +
     "\"What should I focus on?\"",
 };
 

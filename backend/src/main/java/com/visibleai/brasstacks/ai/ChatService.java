@@ -52,7 +52,7 @@ public class ChatService {
         sb.append("## About Brasstacks\n");
         sb.append("Brasstacks shows ONE task at a time (the Right Now screen) instead of overwhelming lists. ");
         sb.append("It uses smart prioritization (Eisenhower matrix + deadlines + learned patterns). ");
-        sb.append("Key features: micro-steps (break tasks into tiny actions), focus timer, body doubling ");
+        sb.append("Key features: micro-steps (break tasks into tiny actions), focus timer, focus companion ");
         sb.append("(virtual companion during work), rescue mode (for overwhelm — breathing, grounding, ");
         sb.append("5-min micro-session), context breadcrumbs (remember where you left off), ");
         sb.append("energy tracking, goals, and gentle nudges.\n\n");

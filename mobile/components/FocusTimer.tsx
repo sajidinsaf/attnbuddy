@@ -143,8 +143,8 @@ export default function FocusTimer({ taskId, token, onComplete, onCancel }: Prop
           <Text style={styles.modeBtnDesc}>Countdown timer with 80% warning</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.modeBtn} onPress={() => setMode('bodydouble')}>
-          <Text style={styles.modeBtnTitle}>Body Double</Text>
-          <Text style={styles.modeBtnDesc}>Check-ins every 5 min — like working alongside someone</Text>
+          <Text style={styles.modeBtnTitle}>Focus Companion</Text>
+          <Text style={styles.modeBtnDesc}>Gentle check-ins every 5 min — like having someone working alongside you</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={onCancel} style={{ marginTop: 16 }}>
           <Text style={styles.cancelText}>Cancel</Text>
@@ -158,7 +158,7 @@ export default function FocusTimer({ taskId, token, onComplete, onCancel }: Prop
     return (
       <View style={styles.container}>
         <Text style={styles.pickTitle}>
-          {mode === 'bodydouble' ? 'Body Double' : 'Focus session'}
+          {mode === 'bodydouble' ? 'Focus Companion' : 'Focus session'}
         </Text>
         <Text style={styles.pickSubtitle}>How long?</Text>
         <View style={styles.durationRow}>
@@ -175,7 +175,7 @@ export default function FocusTimer({ taskId, token, onComplete, onCancel }: Prop
     );
   }
 
-  // Check-in (body double only)
+  // Check-in (focus companion only)
   if (phase === 'checkin') {
     const message = CHECK_IN_MESSAGES[(checkInCount - 1) % CHECK_IN_MESSAGES.length];
     return (
@@ -206,7 +206,7 @@ export default function FocusTimer({ taskId, token, onComplete, onCancel }: Prop
       <View style={styles.container}>
         <Text style={styles.doneTitle}>Session complete</Text>
         <Text style={styles.doneSubtitle}>
-          {durationMin} minutes of {mode === 'bodydouble' ? 'body doubling' : 'focus'}
+          {durationMin} minutes of {mode === 'bodydouble' ? 'focus companion' : 'focus'}
           {mode === 'bodydouble' && checkInCount > 0 ? ` · ${checkInCount} check-ins` : ''}
         </Text>
         <View style={styles.doneActions}>
@@ -227,7 +227,7 @@ export default function FocusTimer({ taskId, token, onComplete, onCancel }: Prop
   return (
     <View style={styles.container}>
       {mode === 'bodydouble' && (
-        <Text style={styles.bodyDoubleLabel}>BODY DOUBLE</Text>
+        <Text style={styles.focusCompanionLabel}>FOCUS COMPANION</Text>
       )}
       {isWarning && (
         <Text style={styles.warningLabel}>Wrapping up soon</Text>
@@ -243,7 +243,7 @@ export default function FocusTimer({ taskId, token, onComplete, onCancel }: Prop
         ]} />
       </View>
       <Text style={styles.timerMeta}>
-        {durationMin}m {mode === 'bodydouble' ? 'body double' : 'session'}
+        {durationMin}m {mode === 'bodydouble' ? 'focus companion' : 'session'}
       </Text>
       <TouchableOpacity style={styles.stopBtn} onPress={handleStop}>
         <Text style={styles.stopBtnText}>Stop</Text>
@@ -274,7 +274,7 @@ const styles = StyleSheet.create({
   durationText: { color: '#FFFFFF', fontSize: 16, fontWeight: '700' },
   cancelText: { color: '#64748B', fontSize: 14 },
   // Running phase
-  bodyDoubleLabel: {
+  focusCompanionLabel: {
     color: '#A78BFA', fontSize: 11, fontWeight: '700', letterSpacing: 2, marginBottom: 4,
   },
   timer: { color: '#F8FAFC', fontSize: 64, fontWeight: '200', fontVariant: ['tabular-nums'] },
