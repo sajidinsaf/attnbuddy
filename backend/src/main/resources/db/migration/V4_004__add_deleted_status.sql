@@ -1,0 +1,2 @@
+-- Add DELETED to task status enum
+ALTER TABLE task MODIFY COLUMN status VARCHAR(20) NOT NULL DEFAULT 'PENDING';
