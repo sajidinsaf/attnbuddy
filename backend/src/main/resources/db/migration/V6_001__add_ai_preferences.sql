@@ -1,0 +1,4 @@
+-- AI feature preferences
+ALTER TABLE app_user ADD COLUMN ai_enabled BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE app_user ADD COLUMN ai_provider VARCHAR(20) DEFAULT NULL;
+ALTER TABLE app_user ADD COLUMN ai_api_key VARCHAR(500) DEFAULT NULL;

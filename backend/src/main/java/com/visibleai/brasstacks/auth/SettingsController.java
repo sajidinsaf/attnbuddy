@@ -58,10 +58,39 @@ public class SettingsController {
         return request;
     }
 
+    @GetMapping("/ai")
+    public AiSettings getAiSettings(Authentication auth) {
+        User user = userRepository.findById(getUserId(auth)).orElseThrow();
+        return new AiSettings(
+                user.isAiEnabled(),
+                user.getAiProvider() != null ? user.getAiProvider().name() : null,
+                user.getAiApiKey() != null
+        );
+    }
+
+    @PutMapping("/ai")
+    @Transactional
+    public AiSettings updateAiSettings(Authentication auth, @RequestBody AiSettingsUpdate request) {
+        User user = userRepository.findById(getUserId(auth)).orElseThrow();
+        user.setAiEnabled(request.aiEnabled());
+        if (request.aiProvider() != null) {
+            user.setAiProvider(User.AiProvider.valueOf(request.aiProvider()));
+        }
+        if (request.aiApiKey() != null) {
+            user.setAiApiKey(request.aiApiKey());
+        }
+        userRepository.save(user);
+        return new AiSettings(user.isAiEnabled(),
+                user.getAiProvider() != null ? user.getAiProvider().name() : null,
+                user.getAiApiKey() != null);
+    }
+
     private Long getUserId(Authentication auth) {
         return (Long) auth.getCredentials();
     }
 
     public record NudgeSettings(String nudgeFrequency, String quietStart, String quietEnd) {}
     public record ToneSettings(String tone) {}
+    public record AiSettings(boolean aiEnabled, String aiProvider, boolean hasApiKey) {}
+    public record AiSettingsUpdate(boolean aiEnabled, String aiProvider, String aiApiKey) {}
 }

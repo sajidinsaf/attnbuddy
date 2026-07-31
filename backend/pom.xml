@@ -79,6 +79,8 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
+        <!-- AI providers use HTTP client (built into JDK 11+) -->
+
         <!-- Cache -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

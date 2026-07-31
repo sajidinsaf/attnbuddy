@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert, TextInput, Switch } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useCallback, useState } from 'react';
 import { useFocusEffect, router } from 'expo-router';
@@ -8,6 +8,7 @@ import { Domain } from '../../types/api';
 
 type NudgeFrequency = 'EAGER' | 'MODERATE' | 'MINIMAL';
 type Tone = 'SUPPORTIVE' | 'PEER' | 'PLAYFUL';
+type AiProvider = 'CLAUDE' | 'OPENAI' | 'GEMINI';
 type NudgeSettings = { nudgeFrequency: string; quietStart: string | null; quietEnd: string | null };
 
 const QUIET_PRESETS = [
@@ -24,6 +25,10 @@ export default function SettingsScreen() {
   const [quietStart, setQuietStart] = useState<string | null>(null);
   const [quietEnd, setQuietEnd] = useState<string | null>(null);
   const [tone, setTone] = useState<Tone>('SUPPORTIVE');
+  const [aiEnabled, setAiEnabled] = useState(false);
+  const [aiProvider, setAiProvider] = useState<AiProvider | null>(null);
+  const [aiApiKey, setAiApiKey] = useState('');
+  const [hasApiKey, setHasApiKey] = useState(false);
 
   useFocusEffect(useCallback(() => {
     if (!token) return;
@@ -39,6 +44,13 @@ export default function SettingsScreen() {
       .catch(() => {});
     apiRequest<{ tone: string }>('/api/settings/tone', { token })
       .then(s => setTone(s.tone as Tone))
+      .catch(() => {});
+    apiRequest<{ aiEnabled: boolean; aiProvider: string | null; hasApiKey: boolean }>('/api/settings/ai', { token })
+      .then(s => {
+        setAiEnabled(s.aiEnabled);
+        setAiProvider(s.aiProvider as AiProvider | null);
+        setHasApiKey(s.hasApiKey);
+      })
       .catch(() => {});
   }, [token]));
 
@@ -63,6 +75,20 @@ export default function SettingsScreen() {
     setQuietStart(start);
     setQuietEnd(end);
     saveNudgeSettings(nudgeFrequency, start, end);
+  };
+
+  const saveAiSettings = async (enabled: boolean, provider: AiProvider | null, key: string | null) => {
+    if (!token) return;
+    try {
+      const res = await apiRequest<{ aiEnabled: boolean; aiProvider: string | null; hasApiKey: boolean }>(
+        '/api/settings/ai', {
+          method: 'PUT', token,
+          body: { aiEnabled: enabled, aiProvider: provider, aiApiKey: key },
+        });
+      setHasApiKey(res?.hasApiKey ?? false);
+    } catch (e: any) {
+      Alert.alert('Error', e.message);
+    }
   };
 
   const handleToneChange = async (t: Tone) => {
@@ -177,6 +203,63 @@ export default function SettingsScreen() {
         </View>
 
         <View style={styles.section}>
+          <Text style={styles.sectionTitle}>AI FEATURES</Text>
+          <View style={styles.aiToggleRow}>
+            <View>
+              <Text style={styles.aiToggleLabel}>Enable AI</Text>
+              <Text style={styles.chipHint}>Use AI to break down tasks into steps</Text>
+            </View>
+            <Switch
+              value={aiEnabled}
+              onValueChange={(v) => { setAiEnabled(v); saveAiSettings(v, aiProvider, null); }}
+              trackColor={{ false: '#334155', true: '#6366F1' }}
+              thumbColor="#F8FAFC"
+            />
+          </View>
+          {aiEnabled && (
+            <>
+              <Text style={[styles.sectionTitle, { marginTop: 16 }]}>AI PROVIDER</Text>
+              <View style={styles.chipRow}>
+                {(['CLAUDE', 'OPENAI', 'GEMINI'] as AiProvider[]).map(p => (
+                  <TouchableOpacity
+                    key={p}
+                    style={[styles.chip, aiProvider === p && styles.chipActive]}
+                    onPress={() => { setAiProvider(p); saveAiSettings(aiEnabled, p, null); }}
+                  >
+                    <Text style={[styles.chipText, aiProvider === p && styles.chipTextActive]}>
+                      {p === 'CLAUDE' ? 'Claude' : p === 'OPENAI' ? 'OpenAI' : 'Gemini'}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              <Text style={[styles.sectionTitle, { marginTop: 16 }]}>API KEY</Text>
+              <TextInput
+                style={styles.apiKeyInput}
+                placeholder={hasApiKey ? 'Key saved (enter new to replace)' : 'Paste your API key'}
+                placeholderTextColor="#64748B"
+                value={aiApiKey}
+                onChangeText={setAiApiKey}
+                secureTextEntry
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+              {aiApiKey.length > 0 && (
+                <TouchableOpacity
+                  style={styles.saveKeyBtn}
+                  onPress={() => { saveAiSettings(aiEnabled, aiProvider, aiApiKey); setAiApiKey(''); Alert.alert('Saved', 'API key updated'); }}
+                >
+                  <Text style={styles.saveKeyBtnText}>Save Key</Text>
+                </TouchableOpacity>
+              )}
+              <Text style={styles.chipHint}>
+                Your key is stored on our server and used only for your AI requests. We never share it.
+              </Text>
+            </>
+          )}
+        </View>
+
+        <View style={styles.section}>
           <Text style={styles.sectionTitle}>ABOUT</Text>
           <View style={styles.aboutCard}>
             <Text style={styles.aboutText}>Brasstacks v1.0.0</Text>
@@ -219,6 +302,11 @@ const styles = StyleSheet.create({
   chipText: { color: '#94A3B8', fontSize: 14, fontWeight: '600' },
   chipTextActive: { color: '#FFFFFF' },
   chipHint: { color: '#475569', fontSize: 12, marginTop: 8 },
+  aiToggleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#1E293B', borderRadius: 12, padding: 16, borderWidth: 1, borderColor: '#334155' },
+  aiToggleLabel: { color: '#F8FAFC', fontSize: 16, fontWeight: '600' },
+  apiKeyInput: { backgroundColor: '#1E293B', borderRadius: 10, padding: 12, color: '#F8FAFC', fontSize: 15, borderWidth: 1, borderColor: '#334155', marginTop: 8 },
+  saveKeyBtn: { backgroundColor: '#6366F1', borderRadius: 8, paddingVertical: 8, paddingHorizontal: 16, alignSelf: 'flex-start', marginTop: 10 },
+  saveKeyBtnText: { color: '#FFFFFF', fontSize: 14, fontWeight: '600' },
   aboutCard: {
     backgroundColor: '#1E293B', borderRadius: 12, padding: 16,
     borderWidth: 1, borderColor: '#334155',
