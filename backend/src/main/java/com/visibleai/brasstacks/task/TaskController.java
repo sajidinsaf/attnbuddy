@@ -1,6 +1,12 @@
 package com.visibleai.brasstacks.task;
 
+import com.visibleai.brasstacks.ai.AiService;
+import com.visibleai.brasstacks.ai.AiServiceFactory;
+import com.visibleai.brasstacks.ai.AiUsageTracker;
+import com.visibleai.brasstacks.ai.DataClassifier;
 import com.visibleai.brasstacks.model.Task;
+import com.visibleai.brasstacks.model.User;
+import com.visibleai.brasstacks.repository.UserRepository;
 import com.visibleai.brasstacks.task.dto.*;
 import com.visibleai.brasstacks.task.dto.TemplateResponse;
 import jakarta.validation.Valid;
@@ -17,10 +23,20 @@ public class TaskController {
 
     private final TaskService taskService;
     private final TemplateService templateService;
+    private final AiServiceFactory aiServiceFactory;
+    private final DataClassifier dataClassifier;
+    private final AiUsageTracker aiUsageTracker;
+    private final UserRepository userRepository;
 
-    public TaskController(TaskService taskService, TemplateService templateService) {
+    public TaskController(TaskService taskService, TemplateService templateService,
+                          AiServiceFactory aiServiceFactory, DataClassifier dataClassifier,
+                          AiUsageTracker aiUsageTracker, UserRepository userRepository) {
         this.taskService = taskService;
         this.templateService = templateService;
+        this.aiServiceFactory = aiServiceFactory;
+        this.dataClassifier = dataClassifier;
+        this.aiUsageTracker = aiUsageTracker;
+        this.userRepository = userRepository;
     }
 
     @PostMapping
@@ -101,6 +117,41 @@ public class TaskController {
         var template = templateService.getTemplate(templateId)
                 .orElseThrow(() -> new IllegalArgumentException("Template not found: " + templateId));
         return taskService.applyTemplate(getUserId(auth), id, template.steps());
+    }
+
+    @PostMapping("/{id}/ai-decompose")
+    public java.util.List<TaskResponse.MicroStepResponse> aiDecompose(
+            Authentication auth, @PathVariable Long id) {
+        Long userId = getUserId(auth);
+        User user = userRepository.findById(userId).orElseThrow();
+
+        if (!user.isAiEnabled()) {
+            throw new IllegalArgumentException("AI features are not enabled. Enable them in Settings.");
+        }
+
+        if (!aiUsageTracker.isGlobalEnabled()) {
+            throw new IllegalArgumentException("AI features are temporarily disabled.");
+        }
+
+        if (!aiUsageTracker.canUse(userId)) {
+            throw new IllegalArgumentException("AI usage limit reached. Try again later or use a template.");
+        }
+
+        AiService ai = aiServiceFactory.forUser(user);
+        if (ai == null || !ai.isAvailable()) {
+            throw new IllegalArgumentException("AI is not configured. Add your API key in Settings.");
+        }
+
+        Task task = taskService.getTaskForUser(userId, id);
+        String anonymized = dataClassifier.anonymize(task.getTitle());
+        java.util.List<String> steps = ai.decompose(anonymized);
+
+        if (steps.isEmpty()) {
+            throw new IllegalArgumentException("AI could not generate steps. Try again or use a template.");
+        }
+
+        aiUsageTracker.recordUsage(userId, user.getAiProvider().name());
+        return taskService.applyTemplate(userId, id, steps);
     }
 
     private Long getUserId(Authentication auth) {

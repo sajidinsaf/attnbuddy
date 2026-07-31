@@ -256,7 +256,7 @@ public class TaskService {
         return tasks.map(this::toResponse);
     }
 
-    private Task getTaskForUser(Long userId, Long taskId) {
+    public Task getTaskForUser(Long userId, Long taskId) {
         return taskRepository.findById(taskId)
                 .filter(t -> t.getUser().getId().equals(userId))
                 .orElseThrow(() -> new IllegalArgumentException("Task not found"));

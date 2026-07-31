@@ -32,6 +32,7 @@ export default function NowScreen() {
   const [templates, setTemplates] = useState<Template[]>([]);
   const [showTemplates, setShowTemplates] = useState(false);
   const [applyingTemplate, setApplyingTemplate] = useState(false);
+  const [aiDecomposing, setAiDecomposing] = useState(false);
   const [focusMode, setFocusMode] = useState(false);
   const [rescueMode, setRescueMode] = useState(false);
   const [celebration, setCelebration] = useState<string | null>(null);
@@ -138,6 +139,21 @@ export default function NowScreen() {
       Alert.alert('Error', e.message);
     } finally {
       setApplyingTemplate(false);
+    }
+  };
+
+  const handleAiDecompose = async () => {
+    if (!data?.task || !token) return;
+    setAiDecomposing(true);
+    try {
+      await apiRequest(`/api/tasks/${data.task.id}/ai-decompose`, {
+        method: 'POST', token,
+      });
+      await fetchNext();
+    } catch (e: any) {
+      Alert.alert('AI Decomposition', e.message);
+    } finally {
+      setAiDecomposing(false);
     }
   };
 
@@ -271,9 +287,18 @@ export default function NowScreen() {
                   <Text style={styles.addStepText}>+ Add a step</Text>
                 </TouchableOpacity>
                 {!(task.microSteps && task.microSteps.length > 0) && (
-                  <TouchableOpacity style={styles.addStepBtn} onPress={handleShowTemplates}>
-                    <Text style={styles.templateBtnText}>Use a template</Text>
-                  </TouchableOpacity>
+                  <>
+                    <TouchableOpacity style={styles.addStepBtn} onPress={handleShowTemplates}>
+                      <Text style={styles.templateBtnText}>Template</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.addStepBtn}
+                      onPress={handleAiDecompose}
+                      disabled={aiDecomposing}
+                    >
+                      <Text style={styles.aiBtnText}>{aiDecomposing ? 'Thinking...' : 'AI'}</Text>
+                    </TouchableOpacity>
+                  </>
                 )}
               </View>
             ) : showTemplates ? (
@@ -558,6 +583,7 @@ const styles = StyleSheet.create({
   addStepBtn: { marginTop: 0, paddingVertical: 10 },
   addStepText: { color: '#6366F1', fontSize: 14, fontWeight: '600' },
   templateBtnText: { color: '#A78BFA', fontSize: 14, fontWeight: '600' },
+  aiBtnText: { color: '#34D399', fontSize: 14, fontWeight: '600' },
   templatePicker: { marginTop: 12, backgroundColor: '#0F172A', borderRadius: 12, padding: 14 },
   templatePickerTitle: { color: '#F8FAFC', fontSize: 15, fontWeight: '600', marginBottom: 10 },
   templateList: { maxHeight: 200 },
