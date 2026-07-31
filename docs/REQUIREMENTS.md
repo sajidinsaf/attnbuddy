@@ -70,12 +70,12 @@ Brasstacks is a mobile app for people with ADHD that acts as an **executive func
 
 | ID | Requirement | Status |
 |----|-------------|--------|
-| P5-01 | Body doubling mode: focus session with periodic check-ins from the app | Planned |
-| P5-02 | Rescue mode: "I'm overwhelmed" button that simplifies everything | Planned |
-| P5-03 | Rescue mode offers: work 5 min on one thing, park it with a plan, or do grounding exercise | Planned |
-| P5-04 | Momentum visualization: gentle, non-judgmental progress display | Planned |
-| P5-05 | Micro-celebrations on task completion (varied, no streaks/badges) | Planned |
-| P5-06 | Configurable tone (supportive / peer / playful) | Planned |
+| P5-01 | Body doubling mode: focus session with periodic check-ins from the app | Done |
+| P5-02 | Rescue mode: "I'm overwhelmed" button that simplifies everything | Done |
+| P5-03 | Rescue mode offers: work 5 min on one thing, park it with a plan, or do grounding exercise | Done |
+| P5-04 | Momentum visualization: gentle, non-judgmental progress display | Done |
+| P5-05 | Micro-celebrations on task completion (varied, no streaks/badges) | Done |
+| P5-06 | Configurable tone (supportive / peer / playful) | Done |
 
 ## Phase 6: AI Integration (Post-MVP)
 
