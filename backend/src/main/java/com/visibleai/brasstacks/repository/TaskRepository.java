@@ -26,7 +26,13 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     Page<Task> findByUserIdAndStatusAndParentTaskIsNull(Long userId, Task.Status status, Pageable pageable);
 
-    Page<Task> findByUserIdAndParentTaskIsNull(Long userId, Pageable pageable);
+    @Query("""
+        SELECT t FROM Task t
+        WHERE t.user.id = :userId
+          AND t.parentTask IS NULL
+          AND t.status <> 'DELETED'
+        """)
+    Page<Task> findByUserIdAndParentTaskIsNullExcludeDeleted(@Param("userId") Long userId, Pageable pageable);
 
     long countByUserIdAndStatus(Long userId, Task.Status status);
 

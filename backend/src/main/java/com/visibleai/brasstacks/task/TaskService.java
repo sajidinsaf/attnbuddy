@@ -188,6 +188,22 @@ public class TaskService {
     }
 
     @Transactional
+    public TaskResponse deleteTask(Long userId, Long taskId) {
+        Task task = getTaskForUser(userId, taskId);
+        task.softDelete();
+        taskRepository.save(task);
+        return toResponse(task);
+    }
+
+    @Transactional
+    public TaskResponse restoreTask(Long userId, Long taskId) {
+        Task task = getTaskForUser(userId, taskId);
+        task.restore();
+        taskRepository.save(task);
+        return toResponse(task);
+    }
+
+    @Transactional
     public TaskResponse unsnooze(Long userId, Long taskId) {
         Task task = getTaskForUser(userId, taskId);
         task.unsnooze();
@@ -236,7 +252,7 @@ public class TaskService {
     public Page<TaskResponse> listTasks(Long userId, Task.Status status, Pageable pageable) {
         Page<Task> tasks = status != null
                 ? taskRepository.findByUserIdAndStatusAndParentTaskIsNull(userId, status, pageable)
-                : taskRepository.findByUserIdAndParentTaskIsNull(userId, pageable);
+                : taskRepository.findByUserIdAndParentTaskIsNullExcludeDeleted(userId, pageable);
         return tasks.map(this::toResponse);
     }
 

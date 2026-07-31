@@ -93,7 +93,7 @@ public class Task {
     public enum TaskType { ONE_TIME, SUSTAINED }
     public enum Urgency { URGENT, NOT_URGENT }
     public enum Importance { IMPORTANT, NOT_IMPORTANT }
-    public enum Status { PENDING, DONE, SKIPPED, SNOOZED }
+    public enum Status { PENDING, DONE, SKIPPED, SNOOZED, DELETED }
     public enum EnergyLevel { HIGH, MEDIUM, LOW }
 
     protected Task() {}
@@ -126,6 +126,14 @@ public class Task {
     public void unsnooze() {
         this.status = Status.PENDING;
         this.snoozedUntil = null;
+    }
+
+    public void softDelete() {
+        this.status = Status.DELETED;
+    }
+
+    public void restore() {
+        this.status = Status.PENDING;
     }
 
     // Getters

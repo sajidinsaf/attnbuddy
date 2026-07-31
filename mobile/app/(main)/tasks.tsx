@@ -58,6 +58,8 @@ export default function TasksScreen() {
     setLoadingMore(false);
   };
 
+  const [undoTask, setUndoTask] = useState<{ id: number; title: string } | null>(null);
+
   const handleUnsnooze = async (taskId: number) => {
     if (!token) return;
     setActing(true);
@@ -69,6 +71,40 @@ export default function TasksScreen() {
     } finally {
       setActing(false);
     }
+  };
+
+  const handleDelete = async (taskId: number, title: string) => {
+    if (!token) return;
+    setActing(true);
+    try {
+      await apiRequest(`/api/tasks/${taskId}`, { method: 'DELETE', token });
+      setUndoTask({ id: taskId, title });
+      await fetchPage(0, false, filter);
+      // Auto-dismiss undo after 8 seconds
+      setTimeout(() => setUndoTask(prev => prev?.id === taskId ? null : prev), 8000);
+    } catch (e: any) {
+      Alert.alert('Error', e.message);
+    } finally {
+      setActing(false);
+    }
+  };
+
+  const handleUndo = async () => {
+    if (!token || !undoTask) return;
+    try {
+      await apiRequest(`/api/tasks/${undoTask.id}/restore`, { method: 'POST', token });
+      setUndoTask(null);
+      await fetchPage(0, false, filter);
+    } catch (e: any) {
+      Alert.alert('Error', e.message);
+    }
+  };
+
+  const confirmDelete = (taskId: number, title: string) => {
+    Alert.alert('Delete task?', title, [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Delete', style: 'destructive', onPress: () => handleDelete(taskId, title) },
+    ]);
   };
 
   const filters: Filter[] = ['ALL', 'PENDING', 'SNOOZED', 'DONE'];
@@ -138,9 +174,25 @@ export default function TasksScreen() {
                   <Text style={styles.unsnoozeBtnText}>Wake</Text>
                 </TouchableOpacity>
               )}
+              <TouchableOpacity
+                onPress={() => confirmDelete(item.id, item.title)}
+                disabled={acting}
+                style={styles.deleteBtn}
+              >
+                <Text style={styles.deleteBtnText}>x</Text>
+              </TouchableOpacity>
             </View>
           )}
         />
+      )}
+
+      {undoTask && (
+        <View style={styles.undoBanner}>
+          <Text style={styles.undoText} numberOfLines={1}>Deleted "{undoTask.title}"</Text>
+          <TouchableOpacity onPress={handleUndo}>
+            <Text style={styles.undoAction}>Undo</Text>
+          </TouchableOpacity>
+        </View>
       )}
     </SafeAreaView>
   );
@@ -191,4 +243,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#4F46E5', borderRadius: 8, paddingVertical: 6, paddingHorizontal: 12,
   },
   unsnoozeBtnText: { color: '#FFFFFF', fontSize: 13, fontWeight: '600' },
+  deleteBtn: { padding: 8, marginLeft: 4 },
+  deleteBtnText: { color: '#64748B', fontSize: 16, fontWeight: '600' },
+  undoBanner: {
+    position: 'absolute', bottom: 0, left: 0, right: 0,
+    backgroundColor: '#334155', flexDirection: 'row', alignItems: 'center',
+    justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 14,
+  },
+  undoText: { color: '#E2E8F0', fontSize: 14, flex: 1, marginRight: 12 },
+  undoAction: { color: '#6366F1', fontSize: 15, fontWeight: '700' },
 });

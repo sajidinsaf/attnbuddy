@@ -53,6 +53,16 @@ public class TaskController {
         return taskService.snooze(getUserId(auth), id, request.until(), request.context());
     }
 
+    @DeleteMapping("/{id}")
+    public TaskResponse delete(Authentication auth, @PathVariable Long id) {
+        return taskService.deleteTask(getUserId(auth), id);
+    }
+
+    @PostMapping("/{id}/restore")
+    public TaskResponse restore(Authentication auth, @PathVariable Long id) {
+        return taskService.restoreTask(getUserId(auth), id);
+    }
+
     @PostMapping("/{id}/unsnooze")
     public TaskResponse unsnooze(Authentication auth, @PathVariable Long id) {
         return taskService.unsnooze(getUserId(auth), id);
