@@ -8,6 +8,7 @@
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 720px; margin: 0 auto; padding: 24px; background: #0F172A; color: #E2E8F0; line-height: 1.7; }
         h1 { color: #F8FAFC; font-size: 28px; }
         h2 { color: #6366F1; font-size: 20px; margin-top: 32px; }
+        h3 { color: #A5B4FC; font-size: 16px; margin-top: 20px; }
         p, li { font-size: 15px; color: #CBD5E1; }
         a { color: #6366F1; }
         .updated { color: #64748B; font-size: 13px; }
@@ -15,70 +16,153 @@
         th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #1E293B; font-size: 14px; }
         th { color: #94A3B8; font-weight: 600; }
         ul { padding-left: 20px; }
+        .footer { margin-top: 40px; color: #475569; font-size: 13px; }
     </style>
 </head>
 <body>
     <h1>Brasstacks Privacy Policy</h1>
-    <p class="updated">Last updated: July 30, 2026</p>
+    <p class="updated">Effective: July 30, 2026 | Last Updated: July 30, 2026</p>
 
-    <p>Brasstacks is a focus and productivity support app. Your privacy is fundamental to how we build this product. This policy explains what data we collect, how we use it, and what we never do with it.</p>
+    <p>Brasstacks ("App") is provided by Visible AI ("Company", "we", "us"). This Privacy Policy explains how we collect, use, store, and protect your personal information when you use our App.</p>
 
-    <h2>Our Core Promise</h2>
-    <p><strong>Your personal data never leaves our controlled systems.</strong> We do not sell, share, or send your data to third-party analytics, advertising, or AI services.</p>
+    <h2>1. Our Core Commitment</h2>
+    <p><strong>Your personal data never leaves our controlled systems.</strong> We do not sell, share, rent, or trade your personal data with third parties. We do not use your data to train AI models. We do not use third-party advertising or behavioral tracking services.</p>
 
-    <h2>What We Collect</h2>
+    <h2>2. Information We Collect</h2>
+
+    <h3>2.1 Account Information</h3>
     <table>
-        <tr><th>Data</th><th>Why</th></tr>
-        <tr><td>Email address</td><td>Account login and password recovery</td></tr>
-        <tr><td>Display name</td><td>Shown in the app to personalize your experience</td></tr>
-        <tr><td>Tasks and notes</td><td>Core app functionality — stored on our server so you can access them across sessions</td></tr>
-        <tr><td>Task completion times</td><td>Used to learn your productive hours and improve task prioritization (on our server only)</td></tr>
-        <tr><td>Energy level (optional)</td><td>Helps the app learn when you work best — you choose whether to log this</td></tr>
-        <tr><td>Device push token</td><td>Required to send you notifications (nudges, reminders)</td></tr>
+        <tr><th>Data</th><th>Purpose</th></tr>
+        <tr><td>Email address</td><td>Account authentication and password recovery</td></tr>
+        <tr><td>Display name</td><td>Personalization within the App</td></tr>
+        <tr><td>Password</td><td>Stored as a bcrypt hash — we never store or see your plain text password</td></tr>
+        <tr><td>User profile type</td><td>Context-specific defaults (executive, professional, student)</td></tr>
     </table>
 
-    <h2>What We Never Do</h2>
+    <h3>2.2 User Content</h3>
+    <table>
+        <tr><th>Data</th><th>Purpose</th></tr>
+        <tr><td>Tasks, notes, and micro-steps</td><td>Core App functionality</td></tr>
+        <tr><td>Goals</td><td>Long-term progress tracking</td></tr>
+        <tr><td>Context breadcrumbs</td><td>Helping you resume tasks after interruptions</td></tr>
+        <tr><td>Life domains and weights</td><td>Task categorization and prioritization</td></tr>
+    </table>
+
+    <h3>2.3 Behavioral Data (Collected Automatically)</h3>
+    <table>
+        <tr><th>Data</th><th>Purpose</th></tr>
+        <tr><td>Task completion timestamps</td><td>Learning your productive hours to improve prioritization</td></tr>
+        <tr><td>Energy level (optional, user-provided)</td><td>Refining time-of-day recommendations</td></tr>
+        <tr><td>Focus session durations</td><td>Tracking your focus patterns</td></tr>
+        <tr><td>Skip and snooze counts</td><td>Adjusting task priority scoring</td></tr>
+    </table>
+
+    <h3>2.4 Technical Data</h3>
+    <table>
+        <tr><th>Data</th><th>Purpose</th></tr>
+        <tr><td>Device push token</td><td>Delivering push notifications</td></tr>
+        <tr><td>Device name and platform</td><td>Stored with push token for device identification</td></tr>
+    </table>
+
+    <h2>3. How We Use Your Information</h2>
+    <p>We use your information solely to:</p>
     <ul>
-        <li>Send your task content, notes, or personal data to any third-party AI or cloud service</li>
-        <li>Track your behavior for advertising purposes</li>
-        <li>Sell or share your data with anyone</li>
-        <li>Include personal content in push notification text — notifications contain generic messages only</li>
-        <li>Use analytics or tracking SDKs that send data to third parties</li>
+        <li>Provide and operate the App's features</li>
+        <li>Authenticate your identity and secure your account</li>
+        <li>Prioritize your tasks using our scoring algorithm</li>
+        <li>Learn your productive patterns to improve recommendations (on our server only)</li>
+        <li>Send push notifications (nudges, reminders, weekly reviews)</li>
+        <li>Improve the App based on aggregated, anonymized usage patterns</li>
     </ul>
 
-    <h2>Rescue Mode Privacy</h2>
-    <p>Any data from rescue mode (when you use the "I'm overwhelmed" feature) is treated as strictly private. It is never shared, never sent to any external service, and never used for analytics.</p>
-
-    <h2>Push Notifications</h2>
-    <p>We send push notifications through Expo's push service, which routes to Apple (APNs) for iOS. Notification messages are generic (e.g., "Your priorities today") and never contain your actual task titles or personal content. You can disable notifications at any time in Settings or in your device's notification settings.</p>
-
-    <h2>Data Storage</h2>
-    <p>Your data is stored on our managed server infrastructure. Passwords are hashed with bcrypt and never stored in plain text. Authentication uses JWT tokens.</p>
-
-    <h2>Data Retention</h2>
+    <h2>4. AI and Data Training Transparency</h2>
+    <p>We are explicit about AI:</p>
     <ul>
-        <li>Your data is retained while your account is active</li>
-        <li>Deleted tasks are soft-deleted and permanently purged after 30 days</li>
-        <li>If you delete your account, all personal data is removed within 30 days</li>
+        <li>Your data is <strong>NOT</strong> used to train any third-party AI models</li>
+        <li>Your data is <strong>NOT</strong> used to train our own AI models</li>
+        <li>If AI features are introduced in the future, they will be opt-in and will not process your personal content through external AI services</li>
+        <li>Task prioritization uses a deterministic scoring algorithm, not AI/ML</li>
     </ul>
 
-    <h2>Your Rights</h2>
+    <h2>5. Rescue Mode Privacy</h2>
+    <p>Data from rescue mode (the "I'm overwhelmed" feature) receives the highest privacy protection:</p>
     <ul>
-        <li>You can delete individual tasks at any time</li>
-        <li>You can request a full export of your data</li>
-        <li>You can delete your account and all associated data</li>
-        <li>You can disable all notifications (quiet hours or full opt-out)</li>
+        <li>Never shared with any external service</li>
+        <li>Never used for analytics or product improvement</li>
+        <li>Never included in any data export except at your explicit request</li>
+        <li>You can delete rescue mode data at any time</li>
     </ul>
 
-    <h2>Children</h2>
-    <p>Brasstacks is designed for users aged 13 and older. We do not knowingly collect data from children under 13.</p>
+    <h2>6. Data Sharing</h2>
 
-    <h2>Changes</h2>
-    <p>If we make material changes to this policy, we will notify you through the app before the changes take effect.</p>
+    <h3>6.1 Third-Party Services</h3>
+    <p>We use the following third-party services:</p>
+    <table>
+        <tr><th>Service</th><th>Purpose</th><th>Data Shared</th></tr>
+        <tr><td>Expo Push Notifications</td><td>Delivering push notifications via Apple APNs</td><td>Device push token + generic notification text (never personal content)</td></tr>
+    </table>
+    <p>We do not use any third-party analytics, advertising, or crash reporting services that receive your personal data.</p>
 
-    <h2>Contact</h2>
-    <p>Questions about privacy? Contact us at <a href="mailto:privacy@visibleai.com">privacy@visibleai.com</a>.</p>
+    <h3>6.2 Push Notification Content</h3>
+    <p>Push notification messages are deliberately generic (e.g., "Your priorities today", "Time for a check-in"). We never include your actual task titles, notes, goals, or any personal content in notification payloads. Task details are loaded on-device when you open the App.</p>
 
-    <p style="margin-top: 40px; color: #475569; font-size: 13px;">Brasstacks is made by Visible AI. This is not a medical device and does not provide medical advice.</p>
+    <h2>7. Data Storage and Security</h2>
+    <ul>
+        <li>Data is stored on our managed server infrastructure</li>
+        <li>All connections use HTTPS/TLS encryption in transit</li>
+        <li>Passwords are hashed with bcrypt (12 rounds) — never stored in plain text</li>
+        <li>Authentication uses short-lived JWT access tokens with refresh token rotation</li>
+        <li>Database access is restricted to the application service only</li>
+    </ul>
+
+    <h2>8. Data Retention</h2>
+    <table>
+        <tr><th>Data</th><th>Retention</th></tr>
+        <tr><td>Active account data</td><td>Retained while account is active</td></tr>
+        <tr><td>Deleted tasks</td><td>Soft-deleted, permanently purged after 30 days</td></tr>
+        <tr><td>Deleted account</td><td>All personal data removed within 30 days</td></tr>
+        <tr><td>Server logs</td><td>Retained for 90 days, then deleted</td></tr>
+    </table>
+
+    <h2>9. Your Rights</h2>
+    <p>You have the right to:</p>
+    <ul>
+        <li><strong>Access:</strong> Request a copy of all data we hold about you</li>
+        <li><strong>Correction:</strong> Update your personal information</li>
+        <li><strong>Deletion:</strong> Delete individual tasks or your entire account</li>
+        <li><strong>Portability:</strong> Request your data in a machine-readable format</li>
+        <li><strong>Opt-out of notifications:</strong> Disable all nudges via quiet hours, frequency settings, or device settings</li>
+    </ul>
+    <p>To exercise any of these rights, contact <a href="mailto:privacy@visibleai.com">privacy@visibleai.com</a>.</p>
+
+    <h2>10. Children's Privacy</h2>
+    <p>Brasstacks is designed for users aged 13 and older. We do not knowingly collect personal information from children under 13. If we learn that we have collected data from a child under 13, we will delete it promptly. If you believe a child under 13 has provided us with personal information, please contact us.</p>
+
+    <h2>11. California Residents (CCPA/CPRA)</h2>
+    <p>If you are a California resident, you have additional rights under the CCPA/CPRA:</p>
+    <ul>
+        <li>Right to know what personal information we collect and how it is used</li>
+        <li>Right to delete your personal information</li>
+        <li>Right to opt-out of the sale of personal information — <strong>we do not sell your data</strong></li>
+        <li>Right to non-discrimination for exercising your privacy rights</li>
+    </ul>
+
+    <h2>12. International Users</h2>
+    <p>Your data is stored and processed in the United States. By using the App, you consent to the transfer of your data to the United States. We apply the same privacy protections regardless of your location.</p>
+
+    <h2>13. Cookies and Tracking</h2>
+    <p>The Brasstacks mobile App does not use cookies, web beacons, or third-party tracking technologies. We do not track you across other apps or websites.</p>
+
+    <h2>14. Changes to This Policy</h2>
+    <p>If we make material changes to this Privacy Policy, we will notify you through the App before the changes take effect. We encourage you to review this policy periodically.</p>
+
+    <h2>15. Contact Us</h2>
+    <p>For privacy-related questions or requests:</p>
+    <ul>
+        <li>Email: <a href="mailto:privacy@visibleai.com">privacy@visibleai.com</a></li>
+        <li>Company: Visible AI</li>
+    </ul>
+
+    <p class="footer">Brasstacks is made by Visible AI. This is not a medical device and does not provide medical advice, diagnosis, or treatment.</p>
 </body>
 </html>
