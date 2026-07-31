@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brasstacks - User Guide</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 720px; margin: 0 auto; padding: 24px; background: #0F172A; color: #E2E8F0; line-height: 1.7; }
+        h1 { color: #F8FAFC; font-size: 28px; margin-bottom: 8px; }
+        h2 { color: #6366F1; font-size: 22px; margin-top: 40px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #1E293B; }
+        h3 { color: #A5B4FC; font-size: 17px; margin-top: 24px; margin-bottom: 8px; }
+        p, li { font-size: 15px; color: #CBD5E1; }
+        p { margin-bottom: 12px; }
+        a { color: #6366F1; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        ul, ol { padding-left: 20px; margin-bottom: 12px; }
+        li { margin-bottom: 6px; }
+        .breadcrumb { font-size: 13px; color: #64748B; margin-bottom: 24px; }
+        .breadcrumb a { color: #64748B; }
+        .breadcrumb a:hover { color: #94A3B8; }
+        .intro { font-size: 16px; color: #94A3B8; margin-bottom: 24px; line-height: 1.6; }
+        .toc { background: #1E293B; border: 1px solid #334155; border-radius: 8px; padding: 20px 24px; margin-bottom: 32px; }
+        .toc h3 { margin-top: 0; color: #F8FAFC; font-size: 15px; }
+        .toc ol { margin-bottom: 0; }
+        .toc li { font-size: 14px; }
+        .toc a { color: #A5B4FC; }
+        .tip { background: #1E293B; border-left: 3px solid #6366F1; padding: 14px 18px; border-radius: 6px; margin: 16px 0; font-size: 14px; }
+        .tip strong { color: #A5B4FC; }
+        .setting-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid #1E293B; }
+        .setting-name { color: #F8FAFC; font-weight: 600; font-size: 14px; min-width: 140px; }
+        .setting-desc { font-size: 14px; color: #94A3B8; }
+        .footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid #1E293B; text-align: center; }
+        .footer p { font-size: 13px; color: #475569; }
+        .footer-links { margin-top: 12px; }
+        .footer-links a { color: #64748B; font-size: 13px; margin: 0 12px; }
+        .footer-links a:hover { color: #94A3B8; }
+        @media (max-width: 600px) {
+            body { padding: 16px; }
+            h1 { font-size: 24px; }
+            h2 { font-size: 19px; }
+            .setting-row { flex-direction: column; }
+            .setting-name { margin-bottom: 4px; }
+        }
+    </style>
+</head>
+<body>
+
+    <p class="breadcrumb"><a href="index.html">Brasstacks</a> &raquo; User Guide</p>
+
+    <h1>User Guide</h1>
+    <p class="intro">Everything you need to know about using Brasstacks to support your focus and productivity. This guide walks through each feature and how to make it work for you.</p>
+
+    <div class="toc">
+        <h3>Contents</h3>
+        <ol>
+            <li><a href="#right-now">The Right Now Screen</a></li>
+            <li><a href="#capture">Task Capture</a></li>
+            <li><a href="#micro-steps">Micro-Steps</a></li>
+            <li><a href="#focus-timer">Focus Timer</a></li>
+            <li><a href="#body-doubling">Body Doubling</a></li>
+            <li><a href="#rescue-mode">Rescue Mode</a></li>
+            <li><a href="#goals">Goals</a></li>
+            <li><a href="#settings">Settings</a></li>
+        </ol>
+    </div>
+
+    <h2 id="right-now">1. The Right Now Screen</h2>
+    <p>The Right Now screen is the heart of Brasstacks. Instead of showing you a long list of tasks, it shows you <strong style="color: #F8FAFC;">one thing</strong> &mdash; the single task that matters most at this moment.</p>
+    <p>Brasstacks picks this task using smart prioritization that considers:</p>
+    <ul>
+        <li><strong style="color: #F8FAFC;">Urgency</strong> &mdash; Is there a deadline approaching?</li>
+        <li><strong style="color: #F8FAFC;">Importance</strong> &mdash; Does this move a meaningful goal forward?</li>
+        <li><strong style="color: #F8FAFC;">Your patterns</strong> &mdash; Over time, Brasstacks learns when you tend to do certain types of tasks best.</li>
+    </ul>
+    <p>This is based on a modified Eisenhower matrix, enhanced with deadline awareness and learned behavior patterns.</p>
+
+    <div class="tip">
+        <strong>Tip:</strong> Trust the system. If you find yourself wanting to switch to a different task, ask yourself whether you are genuinely reprioritizing or just avoiding the current one. Brasstacks is designed to help you stick with what matters.
+    </div>
+
+    <h3>Actions from the Right Now Screen</h3>
+    <ul>
+        <li><strong style="color: #F8FAFC;">Start</strong> &mdash; Begin working on the task with the focus timer.</li>
+        <li><strong style="color: #F8FAFC;">Break it down</strong> &mdash; Open the micro-steps view to decompose a big task.</li>
+        <li><strong style="color: #F8FAFC;">Skip</strong> &mdash; Move to the next task without guilt. Brasstacks will bring it back when the time is right.</li>
+        <li><strong style="color: #F8FAFC;">Done</strong> &mdash; Mark it complete and move on.</li>
+    </ul>
+
+    <h2 id="capture">2. Task Capture</h2>
+    <p>Adding tasks to Brasstacks is designed to be fast so you can capture the thought before it disappears.</p>
+    <p>When you capture a task, you can optionally set:</p>
+    <ul>
+        <li><strong style="color: #F8FAFC;">Deadline</strong> &mdash; When does it need to be done?</li>
+        <li><strong style="color: #F8FAFC;">Importance</strong> &mdash; How much does it matter? (High, Medium, Low)</li>
+        <li><strong style="color: #F8FAFC;">Category</strong> &mdash; Work, personal, health, etc.</li>
+    </ul>
+    <p>You do not need to fill in every field. Brasstacks will use sensible defaults and refine its understanding over time.</p>
+
+    <div class="tip">
+        <strong>Tip:</strong> Capture tasks immediately when they come to mind. Do not try to organize them right away. The point of capture is speed &mdash; you can refine details later.
+    </div>
+
+    <h2 id="micro-steps">3. Micro-Steps</h2>
+    <p>Big, vague tasks are the enemy of getting started. "Write the quarterly report" feels impossible. "Open the document and type one sentence" feels doable.</p>
+    <p>Micro-steps help you break any task into tiny, concrete actions. Each step should be:</p>
+    <ul>
+        <li><strong style="color: #F8FAFC;">Small</strong> &mdash; Completable in 2-5 minutes.</li>
+        <li><strong style="color: #F8FAFC;">Specific</strong> &mdash; You know exactly what "done" looks like.</li>
+        <li><strong style="color: #F8FAFC;">Sequential</strong> &mdash; Each one leads naturally to the next.</li>
+    </ul>
+    <p>Brasstacks can suggest micro-steps for you, or you can create your own. As you complete each step, the next one appears automatically.</p>
+
+    <h2 id="focus-timer">4. Focus Timer</h2>
+    <p>The focus timer helps you commit to working on a task for a defined period. It is not a Pomodoro timer (though you can use it that way). It is flexible:</p>
+    <ul>
+        <li>Set any duration that works for you.</li>
+        <li>Pause and resume as needed.</li>
+        <li>Get a gentle alert when the timer ends &mdash; no jarring alarms.</li>
+    </ul>
+    <p>The timer tracks your focus sessions so you can see patterns over time. Some people work in 10-minute bursts. Some can go for an hour. There is no wrong answer.</p>
+
+    <div class="tip">
+        <strong>Tip:</strong> If you are struggling to start, set the timer for just 5 minutes. You will often find that once you begin, you want to keep going.
+    </div>
+
+    <h2 id="body-doubling">5. Body Doubling</h2>
+    <p>Body doubling is a well-known ADHD strategy: having another person present (even virtually) while you work can dramatically improve focus and motivation.</p>
+    <p>Brasstacks provides a virtual body doubling companion that:</p>
+    <ul>
+        <li>Offers a sense of gentle presence and accountability.</li>
+        <li>Provides periodic check-ins to keep you on track.</li>
+        <li>Celebrates your progress without being over the top.</li>
+        <li>Does not judge you if you get distracted.</li>
+    </ul>
+    <p>Body doubling works alongside the focus timer. Enable it when you need that extra sense of "someone is here with me."</p>
+
+    <h2 id="rescue-mode">6. Rescue Mode</h2>
+    <p>Sometimes everything feels like too much. You are frozen, overwhelmed, or spiraling. Rescue mode is designed for exactly these moments.</p>
+    <p>When you activate rescue mode, Brasstacks will:</p>
+    <ol>
+        <li>Pause everything &mdash; no tasks, no timers, no pressure.</li>
+        <li>Guide you through a brief grounding exercise (optional).</li>
+        <li>Help you identify one tiny thing you can do right now.</li>
+        <li>Gently transition you back to your task when you are ready.</li>
+    </ol>
+    <p>There is no shame in using rescue mode. It is there because getting stuck is a normal part of the ADHD experience, and having a way out matters.</p>
+
+    <div class="tip">
+        <strong>Tip:</strong> Set up rescue mode before you need it. When you are calm, explore the options so they feel familiar when you are overwhelmed.
+    </div>
+
+    <h2 id="goals">7. Goals</h2>
+    <p>Goals give your tasks a bigger context. They answer the question: "Why am I doing this?"</p>
+    <p>In Brasstacks, goals are:</p>
+    <ul>
+        <li><strong style="color: #F8FAFC;">Simple</strong> &mdash; A short statement of what you want to achieve.</li>
+        <li><strong style="color: #F8FAFC;">Trackable</strong> &mdash; Linked to tasks that move you toward them.</li>
+        <li><strong style="color: #F8FAFC;">Flexible</strong> &mdash; Adjust them as your priorities change.</li>
+    </ul>
+    <p>When Brasstacks prioritizes your tasks, it factors in which goals they support. Tasks tied to important goals get a natural boost in priority.</p>
+    <p>You do not need to set goals to use Brasstacks. They are there when you want that extra layer of direction.</p>
+
+    <h2 id="settings">8. Settings</h2>
+    <p>Brasstacks adapts to your preferences. Here are the key settings you can configure:</p>
+
+    <h3>Nudge Frequency</h3>
+    <div class="setting-row">
+        <span class="setting-name">Frequency</span>
+        <span class="setting-desc">How often Brasstacks reminds you about your current task. Options range from every 5 minutes to once an hour, or off entirely.</span>
+    </div>
+    <div class="setting-row">
+        <span class="setting-name">Style</span>
+        <span class="setting-desc">Notification style: gentle buzz, subtle banner, or full notification. Choose what works without being annoying.</span>
+    </div>
+
+    <h3>Quiet Hours</h3>
+    <div class="setting-row">
+        <span class="setting-name">Start / End Time</span>
+        <span class="setting-desc">Set a window where Brasstacks will not send any nudges. Use this for sleep, meals, or any time you need to be off.</span>
+    </div>
+    <div class="setting-row">
+        <span class="setting-name">Override</span>
+        <span class="setting-desc">Allow critical deadline reminders to come through even during quiet hours, if you choose.</span>
+    </div>
+
+    <h3>Tone</h3>
+    <div class="setting-row">
+        <span class="setting-name">Cheerful</span>
+        <span class="setting-desc">"Hey, you have got this! Ready to come back to your task?"</span>
+    </div>
+    <div class="setting-row">
+        <span class="setting-name">Calm</span>
+        <span class="setting-desc">"Whenever you are ready, your task is here."</span>
+    </div>
+    <div class="setting-row">
+        <span class="setting-name">Direct</span>
+        <span class="setting-desc">"Time to refocus. Your current task: [task name]."</span>
+    </div>
+
+    <div class="tip">
+        <strong>Tip:</strong> Your ideal settings may change throughout the day. Some people prefer direct nudges in the morning and calm ones in the afternoon. Experiment and adjust.
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2026 <a href="https://visibleai.com">visibleai.com</a>. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms &amp; Conditions</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-links" style="margin-top: 8px;">
+            <a href="https://facebook.com/visibleai" target="_blank">Facebook</a>
+            <a href="https://instagram.com/visibleai" target="_blank">Instagram</a>
+            <a href="https://linkedin.com/company/visibleai" target="_blank">LinkedIn</a>
+        </div>
+    </div>
+
+</body>
+</html>

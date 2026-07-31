@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brasstacks - ADHD Focus &amp; Productivity Companion</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 720px; margin: 0 auto; padding: 24px; background: #0F172A; color: #E2E8F0; line-height: 1.7; }
+        h1 { color: #F8FAFC; font-size: 32px; margin-bottom: 8px; }
+        h2 { color: #F8FAFC; font-size: 24px; margin-top: 48px; margin-bottom: 16px; }
+        h3 { color: #A5B4FC; font-size: 18px; margin-top: 24px; margin-bottom: 8px; }
+        p, li { font-size: 15px; color: #CBD5E1; }
+        a { color: #6366F1; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .hero { text-align: center; padding: 48px 0 32px; }
+        .hero h1 { font-size: 40px; letter-spacing: -0.5px; }
+        .hero .tagline { font-size: 20px; color: #94A3B8; margin-top: 12px; line-height: 1.5; }
+        .badge { display: inline-block; background: #1E293B; color: #A5B4FC; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; margin-bottom: 20px; border: 1px solid #334155; }
+        .accent { color: #6366F1; }
+        .cta-button { display: inline-block; background: #6366F1; color: #F8FAFC; font-size: 16px; font-weight: 600; padding: 14px 32px; border-radius: 8px; text-decoration: none; margin-top: 24px; transition: background 0.2s; }
+        .cta-button:hover { background: #4F46E5; text-decoration: none; }
+        .cta-button-outline { display: inline-block; background: transparent; color: #A5B4FC; font-size: 15px; font-weight: 500; padding: 12px 28px; border-radius: 8px; text-decoration: none; margin-top: 12px; border: 1px solid #334155; transition: border-color 0.2s; }
+        .cta-button-outline:hover { border-color: #6366F1; text-decoration: none; }
+        .disclaimer { background: #1E293B; border-left: 3px solid #F59E0B; padding: 16px 20px; border-radius: 6px; margin: 32px 0; font-size: 14px; color: #CBD5E1; }
+        .disclaimer strong { color: #FBBF24; }
+        .features { margin-top: 32px; }
+        .feature-card { background: #1E293B; border: 1px solid #334155; border-radius: 10px; padding: 24px; margin-bottom: 16px; }
+        .feature-card h3 { margin-top: 0; color: #F8FAFC; font-size: 17px; }
+        .feature-card p { margin-top: 8px; font-size: 14px; }
+        .feature-icon { font-size: 24px; margin-bottom: 8px; display: block; }
+        .phase { margin-bottom: 32px; }
+        .phase-label { display: inline-block; background: #6366F1; color: #F8FAFC; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+        .phase h3 { color: #F8FAFC; margin-top: 4px; }
+        .phase p { margin-top: 6px; }
+        .phase ul { margin-top: 8px; padding-left: 20px; }
+        .phase li { font-size: 14px; margin-bottom: 4px; }
+        .values { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+        .value-item { background: #1E293B; border: 1px solid #334155; border-radius: 8px; padding: 16px; }
+        .value-item h4 { color: #A5B4FC; font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+        .value-item p { font-size: 13px; }
+        .section-divider { border: none; border-top: 1px solid #1E293B; margin: 48px 0; }
+        .contact-section { background: #1E293B; border: 1px solid #334155; border-radius: 10px; padding: 32px; text-align: center; margin-top: 32px; }
+        .contact-section h2 { margin-top: 0; }
+        .contact-section p { margin-bottom: 16px; }
+        .footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid #1E293B; text-align: center; }
+        .footer p { font-size: 13px; color: #475569; }
+        .footer-links { margin-top: 12px; }
+        .footer-links a { color: #64748B; font-size: 13px; margin: 0 12px; }
+        .footer-links a:hover { color: #94A3B8; }
+        @media (max-width: 600px) {
+            body { padding: 16px; }
+            .hero h1 { font-size: 28px; }
+            .hero .tagline { font-size: 17px; }
+            h2 { font-size: 20px; }
+            .values { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <span class="badge">ADHD Executive Function Support</span>
+        <h1>Brasstacks</h1>
+        <p class="tagline">A focus and productivity companion<br>built for the way your brain actually works.</p>
+        <a href="guide.html" class="cta-button">Read the Guide</a>
+        <br>
+        <a href="contact.html" class="cta-button-outline">Get in Touch</a>
+    </div>
+
+    <div class="disclaimer">
+        <strong>Important:</strong> Brasstacks is <em>not</em> a medical device, therapy replacement, or diagnostic tool. It is a productivity companion designed to support executive function. Always consult a qualified healthcare professional for medical advice.
+    </div>
+
+    <hr class="section-divider">
+
+    <h2>What is Brasstacks?</h2>
+    <p>If you have ADHD, you already know that most productivity apps are built for neurotypical brains. They give you a to-do list, maybe a calendar, and expect you to just... do the things. That does not work when your brain fights you on prioritization, task switching, and getting started.</p>
+    <p style="margin-top: 12px;">Brasstacks takes a different approach. Instead of showing you everything at once, it asks one question: <strong style="color: #A5B4FC;">What should you do right now?</strong> Then it helps you actually do it.</p>
+
+    <hr class="section-divider">
+
+    <h2>How It Helps</h2>
+
+    <div class="features">
+        <div class="feature-card">
+            <h3>Single-Task Focus</h3>
+            <p>No overwhelming lists. Brasstacks surfaces one task at a time using smart prioritization that weighs urgency, importance, deadlines, and your own patterns. You see what matters right now, not everything you have ever added.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>Micro-Steps</h3>
+            <p>Big tasks are paralyzing. Brasstacks helps you break them into tiny, concrete steps so you always know exactly what to do next. "Write the report" becomes "Open the document and type the first sentence."</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>Body Doubling</h3>
+            <p>Sometimes you just need the sense that someone is there with you. Brasstacks provides gentle virtual companionship and accountability while you work, without judgment.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>Rescue Mode</h3>
+            <p>Feeling stuck or overwhelmed? Rescue mode helps you break through paralysis with guided prompts and breathing exercises. It meets you where you are, not where you think you should be.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>Gentle Nudges, No Punishment</h3>
+            <p>Brasstacks uses kind reminders with customizable tone and frequency. Missed a task? No guilt trips, no streak-breaking penalties. It simply asks if you would like to come back to it, or move on.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>Your Data Stays Private</h3>
+            <p>Your tasks, habits, and patterns are personal. Brasstacks does not sell your data, does not share it with advertisers, and does not use it to train AI models. Your information stays under your control.</p>
+        </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <h2>Development Roadmap</h2>
+    <p style="margin-bottom: 24px;">Brasstacks is being built in phases, each one adding deeper support for executive function challenges.</p>
+
+    <div class="phase">
+        <span class="phase-label">Phase 1</span>
+        <h3>Foundation</h3>
+        <p>Core task capture, smart prioritization using the Eisenhower matrix combined with deadline awareness, and the "Right Now" single-task screen.</p>
+        <ul>
+            <li>Quick task capture with natural language</li>
+            <li>Eisenhower matrix prioritization (urgent/important)</li>
+            <li>Deadline-aware scheduling</li>
+            <li>Single-task "Right Now" focus view</li>
+        </ul>
+    </div>
+
+    <div class="phase">
+        <span class="phase-label">Phase 2</span>
+        <h3>Focus Support</h3>
+        <p>Tools to help you stay engaged once you have started: focus timers, micro-step breakdowns, and body doubling.</p>
+        <ul>
+            <li>Customizable focus timer</li>
+            <li>Micro-step task decomposition</li>
+            <li>Body doubling companion mode</li>
+            <li>Session tracking and progress visibility</li>
+        </ul>
+    </div>
+
+    <div class="phase">
+        <span class="phase-label">Phase 3</span>
+        <h3>Emotional Resilience</h3>
+        <p>Rescue mode for overwhelm, gentle nudge system, and adaptive tone that responds to how you are feeling.</p>
+        <ul>
+            <li>Rescue mode with guided recovery</li>
+            <li>Customizable nudge frequency and quiet hours</li>
+            <li>Adaptive tone (cheerful, calm, direct)</li>
+            <li>No-guilt task transitions</li>
+        </ul>
+    </div>
+
+    <div class="phase">
+        <span class="phase-label">Phase 4</span>
+        <h3>Pattern Learning</h3>
+        <p>Brasstacks learns your rhythms and adapts. It notices when you work best, which tasks you avoid, and adjusts its suggestions accordingly.</p>
+        <ul>
+            <li>Time-of-day productivity patterns</li>
+            <li>Task completion trend analysis</li>
+            <li>Smarter priority suggestions over time</li>
+            <li>Personalized daily summaries</li>
+        </ul>
+    </div>
+
+    <div class="phase">
+        <span class="phase-label">Phase 5</span>
+        <h3>Sustained Growth</h3>
+        <p>Goal setting, habit support, and long-term progress tracking to help you build momentum that lasts.</p>
+        <ul>
+            <li>Goal setting and milestone tracking</li>
+            <li>Habit formation support</li>
+            <li>Long-term progress insights</li>
+            <li>Achievement recognition (without toxic gamification)</li>
+        </ul>
+    </div>
+
+    <hr class="section-divider">
+
+    <h2>Our Values</h2>
+
+    <div class="values">
+        <div class="value-item">
+            <h4>Honesty</h4>
+            <p>We do not promise to cure ADHD. We build tools that genuinely help.</p>
+        </div>
+        <div class="value-item">
+            <h4>Kindness</h4>
+            <p>No shame, no guilt, no punishment mechanics. Ever.</p>
+        </div>
+        <div class="value-item">
+            <h4>Privacy</h4>
+            <p>Your data is yours. We do not sell it or exploit it.</p>
+        </div>
+        <div class="value-item">
+            <h4>Simplicity</h4>
+            <p>One thing at a time. That is the whole point.</p>
+        </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="contact-section">
+        <h2>Questions or Feedback?</h2>
+        <p>We would love to hear from you. Whether you have a question, a suggestion, or just want to say hello, reach out through our contact form.</p>
+        <a href="contact.html" class="cta-button">Contact Us</a>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2026 <a href="https://visibleai.com">visibleai.com</a>. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms &amp; Conditions</a>
+            <a href="guide.html">User Guide</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-links" style="margin-top: 8px;">
+            <a href="https://facebook.com/visibleai" target="_blank">Facebook</a>
+            <a href="https://instagram.com/visibleai" target="_blank">Instagram</a>
+            <a href="https://linkedin.com/company/visibleai" target="_blank">LinkedIn</a>
+        </div>
+    </div>
+
+</body>
+</html>

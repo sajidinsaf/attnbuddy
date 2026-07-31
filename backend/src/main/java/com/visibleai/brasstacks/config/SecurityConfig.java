@@ -28,7 +28,8 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/privacy.html", "/terms.html").permitAll()
+                        .requestMatchers("/api/contact").permitAll()
+                        .requestMatchers("/", "/index.html", "/privacy.html", "/terms.html", "/guide.html", "/contact.html").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .anyRequest().authenticated())
                 .headers(headers -> headers
