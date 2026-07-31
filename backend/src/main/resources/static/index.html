@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brasstacks - ADHD Focus &amp; Productivity Companion</title>
+    <title>Brasstacks - Focus &amp; Productivity for ADHD</title>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 720px; margin: 0 auto; padding: 24px; background: #0F172A; color: #E2E8F0; line-height: 1.7; }
         h1 { color: #F8FAFC; font-size: 32px; margin-bottom: 8px; }
         h2 { color: #F8FAFC; font-size: 24px; margin-top: 48px; margin-bottom: 16px; }
-        h3 { color: #A5B4FC; font-size: 18px; margin-top: 24px; margin-bottom: 8px; }
         p, li { font-size: 15px; color: #CBD5E1; }
         a { color: #6366F1; text-decoration: none; }
         a:hover { text-decoration: underline; }
@@ -17,24 +16,20 @@
         .hero h1 { font-size: 40px; letter-spacing: -0.5px; }
         .hero .tagline { font-size: 20px; color: #94A3B8; margin-top: 12px; line-height: 1.5; }
         .badge { display: inline-block; background: #1E293B; color: #A5B4FC; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; margin-bottom: 20px; border: 1px solid #334155; }
-        .accent { color: #6366F1; }
         .cta-button { display: inline-block; background: #6366F1; color: #F8FAFC; font-size: 16px; font-weight: 600; padding: 14px 32px; border-radius: 8px; text-decoration: none; margin-top: 24px; transition: background 0.2s; }
         .cta-button:hover { background: #4F46E5; text-decoration: none; }
         .cta-button-outline { display: inline-block; background: transparent; color: #A5B4FC; font-size: 15px; font-weight: 500; padding: 12px 28px; border-radius: 8px; text-decoration: none; margin-top: 12px; border: 1px solid #334155; transition: border-color 0.2s; }
         .cta-button-outline:hover { border-color: #6366F1; text-decoration: none; }
         .disclaimer { background: #1E293B; border-left: 3px solid #F59E0B; padding: 16px 20px; border-radius: 6px; margin: 32px 0; font-size: 14px; color: #CBD5E1; }
         .disclaimer strong { color: #FBBF24; }
+        .story { margin-top: 32px; }
+        .story p { margin-top: 12px; }
+        .story .highlight { color: #A5B4FC; font-weight: 600; }
+        .story .signature { margin-top: 24px; color: #94A3B8; font-style: italic; }
         .features { margin-top: 32px; }
         .feature-card { background: #1E293B; border: 1px solid #334155; border-radius: 10px; padding: 24px; margin-bottom: 16px; }
         .feature-card h3 { margin-top: 0; color: #F8FAFC; font-size: 17px; }
         .feature-card p { margin-top: 8px; font-size: 14px; }
-        .feature-icon { font-size: 24px; margin-bottom: 8px; display: block; }
-        .phase { margin-bottom: 32px; }
-        .phase-label { display: inline-block; background: #6366F1; color: #F8FAFC; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
-        .phase h3 { color: #F8FAFC; margin-top: 4px; }
-        .phase p { margin-top: 6px; }
-        .phase ul { margin-top: 8px; padding-left: 20px; }
-        .phase li { font-size: 14px; margin-bottom: 4px; }
         .values { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
         .value-item { background: #1E293B; border: 1px solid #334155; border-radius: 8px; padding: 16px; }
         .value-item h4 { color: #A5B4FC; font-size: 14px; font-weight: 600; margin-bottom: 4px; }
@@ -60,12 +55,33 @@
 <body>
 
     <div class="hero">
-        <span class="badge">ADHD Executive Function Support</span>
+        <span class="badge">Focus &amp; Productivity Support</span>
         <h1>Brasstacks</h1>
-        <p class="tagline">A focus and productivity companion<br>built for the way your brain actually works.</p>
-        <a href="guide.html" class="cta-button">Read the Guide</a>
+        <p class="tagline">Built by someone with ADHD,<br>for the way our brains actually work.</p>
+        <a href="guide.html" class="cta-button">How It Works</a>
         <br>
         <a href="contact.html" class="cta-button-outline">Get in Touch</a>
+    </div>
+
+    <hr class="section-divider">
+
+    <h2>Why I Built This</h2>
+    <div class="story">
+        <p>I lived most of my life not knowing I had ADHD. It wasn't until my mid-forties, when my brother &mdash; a psychiatrist &mdash; pointed it out, that things finally clicked. Decades of wondering why things that seemed effortless for others felt impossibly hard for me suddenly had an explanation.</p>
+
+        <p>By then I was running a company. Two teenage kids. A demanding market. Every day brings dozens of things that need attention, and every one of them feels equally urgent. The kind of life where dropping a single ball can have real consequences.</p>
+
+        <p>So I did what you'd expect: I tried everything. To-do list apps. Spreadsheets. Project management tools. Time-blocking. I read the productivity books. I tried the frameworks. <span class="highlight">They all had the same problem: they require the exact executive function skills that ADHD impairs.</span> They hand you a list and expect you to prioritise, start, sustain attention, and remember to come back. That's not a tool &mdash; that's a test I was already failing.</p>
+
+        <p>I needed something different. Not another list. Not another system to maintain. I needed something that would <span class="highlight">think with me, not wait for me to think.</span> Something that would answer the only question that matters when you're overwhelmed: <em>what should I do right now?</em></p>
+
+        <p>So I built Brasstacks.</p>
+
+        <p>It shows you one task. The right task, right now. It breaks big things into small things. It sits with you while you work. And when everything feels like too much, it helps you breathe first and figure out the rest after.</p>
+
+        <p>It's not a cure. It's not therapy. It's a companion that understands that some days, just starting is the hardest part.</p>
+
+        <p class="signature">&mdash; Sajid, founder of Brasstacks</p>
     </div>
 
     <div class="disclaimer">
@@ -74,119 +90,58 @@
 
     <hr class="section-divider">
 
-    <h2>What is Brasstacks?</h2>
-    <p>If you have ADHD, you already know that most productivity apps are built for neurotypical brains. They give you a to-do list, maybe a calendar, and expect you to just... do the things. That does not work when your brain fights you on prioritization, task switching, and getting started.</p>
-    <p style="margin-top: 12px;">Brasstacks takes a different approach. Instead of showing you everything at once, it asks one question: <strong style="color: #A5B4FC;">What should you do right now?</strong> Then it helps you actually do it.</p>
-
-    <hr class="section-divider">
-
-    <h2>How It Helps</h2>
+    <h2>What It Does</h2>
 
     <div class="features">
         <div class="feature-card">
-            <h3>Single-Task Focus</h3>
-            <p>No overwhelming lists. Brasstacks surfaces one task at a time using smart prioritization that weighs urgency, importance, deadlines, and your own patterns. You see what matters right now, not everything you have ever added.</p>
+            <h3>One Task at a Time</h3>
+            <p>No overwhelming lists. Brasstacks surfaces the single most important thing right now, using smart prioritization that weighs urgency, importance, deadlines, and your own patterns. You decide what to do with it &mdash; not what to do about everything.</p>
         </div>
 
         <div class="feature-card">
-            <h3>Micro-Steps</h3>
-            <p>Big tasks are paralyzing. Brasstacks helps you break them into tiny, concrete steps so you always know exactly what to do next. "Write the report" becomes "Open the document and type the first sentence."</p>
+            <h3>Break It Down</h3>
+            <p>Big tasks cause paralysis. Brasstacks helps you break them into micro-steps &mdash; small, concrete actions you can actually start. "Write the report" becomes "Open the document and type the first sentence." You can use templates or create your own steps.</p>
         </div>
 
         <div class="feature-card">
             <h3>Body Doubling</h3>
-            <p>Sometimes you just need the sense that someone is there with you. Brasstacks provides gentle virtual companionship and accountability while you work, without judgment.</p>
+            <p>Sometimes you just need the sense that someone is there. Body double mode provides gentle check-ins while you work &mdash; like having a colleague quietly working alongside you. It's accountability without judgment.</p>
         </div>
 
         <div class="feature-card">
             <h3>Rescue Mode</h3>
-            <p>Feeling stuck or overwhelmed? Rescue mode helps you break through paralysis with guided prompts and breathing exercises. It meets you where you are, not where you think you should be.</p>
+            <p>For those moments when everything feels like too much. Rescue mode meets you where you are with simple options: do just five minutes on one thing, park it with a note for later, or take a moment to breathe and ground yourself first.</p>
         </div>
 
         <div class="feature-card">
-            <h3>Gentle Nudges, No Punishment</h3>
-            <p>Brasstacks uses kind reminders with customizable tone and frequency. Missed a task? No guilt trips, no streak-breaking penalties. It simply asks if you would like to come back to it, or move on.</p>
+            <h3>Context Memory</h3>
+            <p>When you switch away from a task, Brasstacks asks where you left off. When you come back to it, that note is waiting for you. No more losing twenty minutes trying to remember what you were doing.</p>
         </div>
 
         <div class="feature-card">
-            <h3>Your Data Stays Private</h3>
-            <p>Your tasks, habits, and patterns are personal. Brasstacks does not sell your data, does not share it with advertisers, and does not use it to train AI models. Your information stays under your control.</p>
+            <h3>Gentle Nudges, Never Guilt</h3>
+            <p>Customizable reminders with the tone you prefer &mdash; supportive, direct, or playful. Quiet hours when you need silence. And absolutely no streaks, no shame, no red "overdue" warnings. Missed something? It simply asks if you'd like to come back to it.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>Learns Your Patterns</h3>
+            <p>Over time, Brasstacks notices when you're most productive and adjusts its suggestions. It tracks your energy levels and completion patterns &mdash; all on our server, never shared with anyone &mdash; so the right tasks surface at the right times.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>Your Data Stays Yours</h3>
+            <p>Your tasks, notes, and patterns are deeply personal. Brasstacks does not sell your data, share it with advertisers, or use it to train AI models. What you put in stays between you and the app. <a href="privacy.html">Read our privacy policy</a>.</p>
         </div>
     </div>
 
     <hr class="section-divider">
 
-    <h2>Development Roadmap</h2>
-    <p style="margin-bottom: 24px;">Brasstacks is being built in phases, each one adding deeper support for executive function challenges.</p>
-
-    <div class="phase">
-        <span class="phase-label">Phase 1</span>
-        <h3>Foundation</h3>
-        <p>Core task capture, smart prioritization using the Eisenhower matrix combined with deadline awareness, and the "Right Now" single-task screen.</p>
-        <ul>
-            <li>Quick task capture with natural language</li>
-            <li>Eisenhower matrix prioritization (urgent/important)</li>
-            <li>Deadline-aware scheduling</li>
-            <li>Single-task "Right Now" focus view</li>
-        </ul>
-    </div>
-
-    <div class="phase">
-        <span class="phase-label">Phase 2</span>
-        <h3>Focus Support</h3>
-        <p>Tools to help you stay engaged once you have started: focus timers, micro-step breakdowns, and body doubling.</p>
-        <ul>
-            <li>Customizable focus timer</li>
-            <li>Micro-step task decomposition</li>
-            <li>Body doubling companion mode</li>
-            <li>Session tracking and progress visibility</li>
-        </ul>
-    </div>
-
-    <div class="phase">
-        <span class="phase-label">Phase 3</span>
-        <h3>Emotional Resilience</h3>
-        <p>Rescue mode for overwhelm, gentle nudge system, and adaptive tone that responds to how you are feeling.</p>
-        <ul>
-            <li>Rescue mode with guided recovery</li>
-            <li>Customizable nudge frequency and quiet hours</li>
-            <li>Adaptive tone (cheerful, calm, direct)</li>
-            <li>No-guilt task transitions</li>
-        </ul>
-    </div>
-
-    <div class="phase">
-        <span class="phase-label">Phase 4</span>
-        <h3>Pattern Learning</h3>
-        <p>Brasstacks learns your rhythms and adapts. It notices when you work best, which tasks you avoid, and adjusts its suggestions accordingly.</p>
-        <ul>
-            <li>Time-of-day productivity patterns</li>
-            <li>Task completion trend analysis</li>
-            <li>Smarter priority suggestions over time</li>
-            <li>Personalized daily summaries</li>
-        </ul>
-    </div>
-
-    <div class="phase">
-        <span class="phase-label">Phase 5</span>
-        <h3>Sustained Growth</h3>
-        <p>Goal setting, habit support, and long-term progress tracking to help you build momentum that lasts.</p>
-        <ul>
-            <li>Goal setting and milestone tracking</li>
-            <li>Habit formation support</li>
-            <li>Long-term progress insights</li>
-            <li>Achievement recognition (without toxic gamification)</li>
-        </ul>
-    </div>
-
-    <hr class="section-divider">
-
-    <h2>Our Values</h2>
+    <h2>What We Believe</h2>
 
     <div class="values">
         <div class="value-item">
             <h4>Honesty</h4>
-            <p>We do not promise to cure ADHD. We build tools that genuinely help.</p>
+            <p>We don't promise to fix ADHD. We build tools that genuinely help manage it.</p>
         </div>
         <div class="value-item">
             <h4>Kindness</h4>
@@ -194,20 +149,20 @@
         </div>
         <div class="value-item">
             <h4>Privacy</h4>
-            <p>Your data is yours. We do not sell it or exploit it.</p>
+            <p>Your data is yours. We don't sell it, share it, or exploit it.</p>
         </div>
         <div class="value-item">
             <h4>Simplicity</h4>
-            <p>One thing at a time. That is the whole point.</p>
+            <p>One thing at a time. That's the whole point.</p>
         </div>
     </div>
 
     <hr class="section-divider">
 
     <div class="contact-section">
-        <h2>Questions or Feedback?</h2>
-        <p>We would love to hear from you. Whether you have a question, a suggestion, or just want to say hello, reach out through our contact form.</p>
-        <a href="contact.html" class="cta-button">Contact Us</a>
+        <h2>I'd Love to Hear From You</h2>
+        <p>Whether you have a question, a suggestion, or just want to share your experience &mdash; I read every message personally.</p>
+        <a href="contact.html" class="cta-button">Contact Me</a>
     </div>
 
     <div class="footer">
