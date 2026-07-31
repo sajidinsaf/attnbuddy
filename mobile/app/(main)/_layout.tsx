@@ -5,6 +5,7 @@ function TabIcon({ name, focused }: { name: string; focused: boolean }) {
   const icons: Record<string, string> = {
     now: '◉',
     capture: '+',
+    chat: '?',
     tasks: '▤',
     goals: '◎',
     history: '☰',
@@ -55,25 +56,29 @@ export default function MainLayout() {
         }}
       />
       <Tabs.Screen
+        name="chat"
+        options={{
+          title: 'Ask',
+          headerTitle: 'Assistant',
+          tabBarIcon: ({ focused }) => <TabIcon name="chat" focused={focused} />,
+        }}
+      />
+      <Tabs.Screen
         name="tasks"
         options={{
-          title: 'Tasks',
-          headerTitle: 'All Tasks',
-          tabBarIcon: ({ focused }) => <TabIcon name="tasks" focused={focused} />,
+          href: null, // Accessible via chat or direct navigation
         }}
       />
       <Tabs.Screen
         name="goals"
         options={{
-          title: 'Goals',
-          headerTitle: 'Goals',
-          tabBarIcon: ({ focused }) => <TabIcon name="goals" focused={focused} />,
+          href: null, // Accessible via chat or Settings
         }}
       />
       <Tabs.Screen
         name="history"
         options={{
-          href: null, // Hidden from tab bar — accessible via Tasks > Done filter
+          href: null,
         }}
       />
       <Tabs.Screen
