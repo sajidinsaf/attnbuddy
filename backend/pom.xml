@@ -16,7 +16,7 @@
     <version>0.1.0</version>
     <packaging>war</packaging>
     <name>Brasstacks</name>
-    <description>Getting down to what matters — focus and productivity support for ADHD</description>
+    <description>Getting down to what matters — focus and productivity support</description>
 
     <properties>
         <java.version>17</java.version>
