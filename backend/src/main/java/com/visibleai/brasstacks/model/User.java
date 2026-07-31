@@ -45,6 +45,16 @@ public class User {
     @Column(name = "tone", nullable = false)
     private Tone tone = Tone.SUPPORTIVE;
 
+    @Column(name = "ai_enabled", nullable = false)
+    private boolean aiEnabled = false;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ai_provider")
+    private AiProvider aiProvider;
+
+    @Column(name = "ai_api_key", length = 500)
+    private String aiApiKey;
+
     public enum Profile {
         EXECUTIVE, PROFESSIONAL, STUDENT
     }
@@ -55,6 +65,10 @@ public class User {
 
     public enum Tone {
         SUPPORTIVE, PEER, PLAYFUL
+    }
+
+    public enum AiProvider {
+        CLAUDE, OPENAI, GEMINI
     }
 
     protected User() {}
@@ -96,6 +110,12 @@ public class User {
     public void setQuietEnd(String quietEnd) { this.quietEnd = quietEnd; }
     public Tone getTone() { return tone; }
     public void setTone(Tone tone) { this.tone = tone; }
+    public boolean isAiEnabled() { return aiEnabled; }
+    public void setAiEnabled(boolean aiEnabled) { this.aiEnabled = aiEnabled; }
+    public AiProvider getAiProvider() { return aiProvider; }
+    public void setAiProvider(AiProvider aiProvider) { this.aiProvider = aiProvider; }
+    public String getAiApiKey() { return aiApiKey; }
+    public void setAiApiKey(String aiApiKey) { this.aiApiKey = aiApiKey; }
 
     public boolean isInQuietHours() {
         if (quietStart == null || quietEnd == null) return false;
