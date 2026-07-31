@@ -43,9 +43,25 @@ public class SettingsController {
         return request;
     }
 
+    @GetMapping("/tone")
+    public ToneSettings getTone(Authentication auth) {
+        User user = userRepository.findById(getUserId(auth)).orElseThrow();
+        return new ToneSettings(user.getTone().name());
+    }
+
+    @PutMapping("/tone")
+    @Transactional
+    public ToneSettings updateTone(Authentication auth, @RequestBody ToneSettings request) {
+        User user = userRepository.findById(getUserId(auth)).orElseThrow();
+        user.setTone(User.Tone.valueOf(request.tone()));
+        userRepository.save(user);
+        return request;
+    }
+
     private Long getUserId(Authentication auth) {
         return (Long) auth.getCredentials();
     }
 
     public record NudgeSettings(String nudgeFrequency, String quietStart, String quietEnd) {}
+    public record ToneSettings(String tone) {}
 }

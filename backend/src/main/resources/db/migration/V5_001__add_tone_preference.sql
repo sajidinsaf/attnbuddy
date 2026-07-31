@@ -1,0 +1,2 @@
+-- Configurable app tone
+ALTER TABLE app_user ADD COLUMN tone VARCHAR(20) NOT NULL DEFAULT 'SUPPORTIVE';
