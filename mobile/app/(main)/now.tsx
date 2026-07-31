@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert, TextInput, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert, TextInput, ScrollView, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useCallback, useState } from 'react';
 import { useFocusEffect, router } from 'expo-router';
@@ -147,7 +147,13 @@ export default function NowScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
-      <View style={styles.content}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={90}
+      >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         {task && focusMode ? (
           <FocusTimer
             taskId={task.id}
@@ -409,7 +415,9 @@ export default function NowScreen() {
             </TouchableOpacity>
           </View>
         )}
-      </View>
+      </ScrollView>
+      </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -474,7 +482,7 @@ function getDeadlineInfo(iso: string): DeadlineInfo {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#0F172A' },
-  content: { flex: 1, paddingHorizontal: 20, justifyContent: 'center' },
+  content: { flexGrow: 1, paddingHorizontal: 20, justifyContent: 'center' },
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   card: {
     backgroundColor: '#1E293B', borderRadius: 20, padding: 28,
