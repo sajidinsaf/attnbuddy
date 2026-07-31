@@ -6,6 +6,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { apiRequest } from '../../services/api';
 import { NowResponse, MicroStep, Template } from '../../types/api';
 import FocusTimer from '../../components/FocusTimer';
+import RescueMode from '../../components/RescueMode';
 
 export default function NowScreen() {
   const { token } = useAuth();
@@ -19,6 +20,7 @@ export default function NowScreen() {
   const [showTemplates, setShowTemplates] = useState(false);
   const [applyingTemplate, setApplyingTemplate] = useState(false);
   const [focusMode, setFocusMode] = useState(false);
+  const [rescueMode, setRescueMode] = useState(false);
   const [pendingAction, setPendingAction] = useState<'done' | 'skip' | 'snooze' | null>(null);
   const [breadcrumb, setBreadcrumb] = useState('');
   const [selectedEnergy, setSelectedEnergy] = useState<string | null>(null);
@@ -154,7 +156,13 @@ export default function NowScreen() {
       >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        {task && focusMode ? (
+        {task && rescueMode ? (
+          <RescueMode
+            onMicroSession={() => { setRescueMode(false); setFocusMode(true); }}
+            onPark={() => { setRescueMode(false); setPendingAction('snooze'); }}
+            onClose={() => setRescueMode(false)}
+          />
+        ) : task && focusMode ? (
           <FocusTimer
             taskId={task.id}
             token={token!}
@@ -403,6 +411,10 @@ export default function NowScreen() {
             {data && data.pendingCount > 1 && (
               <Text style={styles.pending}>{data.pendingCount - 1} more tasks waiting</Text>
             )}
+
+            <TouchableOpacity style={styles.rescueBtn} onPress={() => setRescueMode(true)}>
+              <Text style={styles.rescueBtnText}>I'm overwhelmed</Text>
+            </TouchableOpacity>
           </>
         ) : (
           <View style={styles.emptyCard}>
@@ -570,6 +582,8 @@ const styles = StyleSheet.create({
   snoozeBtn: { backgroundColor: '#1E293B', borderWidth: 1, borderColor: '#334155' },
   actionText: { color: '#FFFFFF', fontSize: 15, fontWeight: '600' },
   pending: { color: '#475569', fontSize: 13, textAlign: 'center', marginTop: 20 },
+  rescueBtn: { marginTop: 20, paddingVertical: 12, alignItems: 'center' },
+  rescueBtnText: { color: '#475569', fontSize: 14 },
   emptyCard: {
     backgroundColor: '#1E293B', borderRadius: 20, padding: 32,
     borderWidth: 1, borderColor: '#334155', alignItems: 'center',
