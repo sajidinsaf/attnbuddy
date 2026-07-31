@@ -81,11 +81,11 @@ Brasstacks is a mobile app for people with ADHD that acts as an **executive func
 
 | ID | Requirement | Status |
 |----|-------------|--------|
-| P6-01 | AI adapter interface: vendor-neutral, pluggable | Planned |
-| P6-02 | On-device AI for task decomposition (NO cloud personal data) | Planned |
-| P6-03 | Data classifier blocks personal data from leaving device/server | Planned |
-| P6-04 | Cost controls: daily token budget, rate limits, kill switch | Planned |
-| P6-05 | AI features are opt-in, off by default | Planned |
+| P6-01 | AI adapter interface: vendor-neutral, pluggable | Done |
+| P6-02 | On-device AI for task decomposition (NO cloud personal data) | Done |
+| P6-03 | Data classifier blocks personal data from leaving device/server | Done |
+| P6-04 | Cost controls: daily token budget, rate limits, kill switch | Done |
+| P6-05 | AI features are opt-in, off by default | Done |
 
 ## Deferred: Family Accounts
 
