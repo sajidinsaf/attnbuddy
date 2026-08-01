@@ -61,6 +61,7 @@
             <li><a href="#focus-companion">Focus Companion</a></li>
             <li><a href="#rescue-mode">Rescue Mode</a></li>
             <li><a href="#goals">Goals</a></li>
+            <li><a href="#ai-assistant">AI Assistant</a></li>
             <li><a href="#settings">Settings</a></li>
         </ol>
     </div>
@@ -161,7 +162,67 @@
     <p>When Brasstacks prioritizes your tasks, it factors in which goals they support. Tasks tied to important goals get a natural boost in priority.</p>
     <p>You do not need to set goals to use Brasstacks. They are there when you want that extra layer of direction.</p>
 
-    <h2 id="settings">8. Settings</h2>
+    <h2 id="ai-assistant">8. AI Assistant</h2>
+    <p>Brasstacks includes an optional AI assistant that knows your tasks, goals, and progress. You can ask it things like:</p>
+    <ul>
+        <li>"What tasks do I have?"</li>
+        <li>"What did I finish this week?"</li>
+        <li>"What should I focus on right now?"</li>
+        <li>"How does rescue mode work?"</li>
+    </ul>
+    <p>The assistant can also break down tasks into micro-steps for you automatically.</p>
+
+    <h3>Bring Your Own Key</h3>
+    <p>Brasstacks does not include its own AI &mdash; instead, you connect your own account from one of three providers. This means <strong style="color: #F8FAFC;">you control the costs</strong> and can choose the provider you trust most.</p>
+    <p>Supported providers:</p>
+    <ul>
+        <li><strong style="color: #F8FAFC;">Claude</strong> (Anthropic) &mdash; Model: Claude Haiku</li>
+        <li><strong style="color: #F8FAFC;">OpenAI</strong> &mdash; Model: GPT-4o mini</li>
+        <li><strong style="color: #F8FAFC;">Google Gemini</strong> &mdash; Model: Gemini 2.0 Flash</li>
+    </ul>
+    <p>All three use lightweight, affordable models. Typical usage costs pennies per month.</p>
+
+    <h3>How to Get an API Key</h3>
+    <p>Each provider has a simple sign-up process. You will need a free account and a payment method on file (you are only charged for what you use).</p>
+    <div class="setting-row">
+        <span class="setting-name">Claude</span>
+        <span class="setting-desc">Go to console.anthropic.com &rarr; API Keys &rarr; Create Key. Copy the key.</span>
+    </div>
+    <div class="setting-row">
+        <span class="setting-name">OpenAI</span>
+        <span class="setting-desc">Go to platform.openai.com &rarr; API Keys &rarr; Create new secret key. Copy the key.</span>
+    </div>
+    <div class="setting-row">
+        <span class="setting-name">Gemini</span>
+        <span class="setting-desc">Go to aistudio.google.com &rarr; Get API Key &rarr; Create API key. Copy the key.</span>
+    </div>
+
+    <h3>Setup in the App</h3>
+    <ol>
+        <li>Open <strong style="color: #F8FAFC;">Settings</strong></li>
+        <li>Scroll to <strong style="color: #F8FAFC;">AI Features</strong></li>
+        <li>Toggle <strong style="color: #F8FAFC;">Enable AI</strong> on</li>
+        <li>Select your provider (Claude, OpenAI, or Gemini)</li>
+        <li>Paste your API key and tap <strong style="color: #F8FAFC;">Save Key</strong></li>
+    </ol>
+    <p>Once set up, the <strong style="color: #F8FAFC;">Ask</strong> tab at the bottom of the app will connect you to your assistant.</p>
+
+    <h3>Security &amp; Privacy</h3>
+    <p>Your API key is <strong style="color: #F8FAFC;">encrypted using your password</strong> before it is stored. The encryption key is derived from your login credentials, which means:</p>
+    <ul>
+        <li>Your key is stored as encrypted data on our server &mdash; not in plain text.</li>
+        <li><strong style="color: #F8FAFC;">Only your login can decrypt it.</strong> Even we cannot read your API key.</li>
+        <li>Before your task data is sent to the AI provider, personal details (emails, phone numbers, URLs, dates, and money amounts) are automatically anonymized.</li>
+    </ul>
+
+    <div class="tip">
+        <strong>What happens if I forget my password?</strong> Because your API key is encrypted with your password, a password reset means the encrypted key can no longer be decrypted. You will simply need to re-enter your API key in Settings after resetting your password. Your tasks, goals, and all other data are unaffected.
+    </div>
+
+    <h3>Usage Limits</h3>
+    <p>To keep costs predictable, Brasstacks limits AI usage to 10 messages per hour and 50 per day. This is more than enough for typical use.</p>
+
+    <h2 id="settings">9. Settings</h2>
     <p>Brasstacks adapts to your preferences. Here are the key settings you can configure:</p>
 
     <h3>Nudge Frequency</h3>

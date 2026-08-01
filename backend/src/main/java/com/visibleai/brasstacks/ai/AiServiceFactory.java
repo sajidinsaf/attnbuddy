@@ -6,14 +6,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class AiServiceFactory {
 
-    public AiService forUser(User user) {
-        if (!user.isAiEnabled() || user.getAiProvider() == null || user.getAiApiKey() == null) {
+    public AiService forUser(User user, String decryptedApiKey) {
+        if (!user.isAiEnabled() || user.getAiProvider() == null || decryptedApiKey == null) {
             return null;
         }
         return switch (user.getAiProvider()) {
-            case CLAUDE -> new ClaudeAiService(user.getAiApiKey());
-            case OPENAI -> new OpenAiService(user.getAiApiKey());
-            case GEMINI -> new GeminiAiService(user.getAiApiKey());
+            case CLAUDE -> new ClaudeAiService(decryptedApiKey);
+            case OPENAI -> new OpenAiService(decryptedApiKey);
+            case GEMINI -> new GeminiAiService(decryptedApiKey);
         };
     }
 }
