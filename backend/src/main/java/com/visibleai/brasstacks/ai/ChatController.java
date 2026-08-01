@@ -67,6 +67,9 @@ public class ChatController {
                 : List.of();
 
         String reply = chatService.chat(user, apiKey, history, request.message());
+        if (reply == null) {
+            reply = "I couldn't process that right now. Please try again.";
+        }
         aiUsageTracker.recordUsage(userId, user.getAiProvider().name());
 
         return ResponseEntity.ok(Map.of("reply", reply));
