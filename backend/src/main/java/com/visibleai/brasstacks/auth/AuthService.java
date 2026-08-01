@@ -13,24 +13,33 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Base64;
 import java.util.List;
 
 @Service
 public class AuthService {
 
+    private static final Duration VERIFICATION_EXPIRY = Duration.ofHours(24);
+
     private final UserRepository userRepository;
     private final LifeDomainRepository domainRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final EmailService emailService;
 
     public AuthService(UserRepository userRepository,
                        LifeDomainRepository domainRepository,
                        PasswordEncoder passwordEncoder,
-                       JwtUtil jwtUtil) {
+                       JwtUtil jwtUtil,
+                       EmailService emailService) {
         this.userRepository = userRepository;
         this.domainRepository = domainRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
+        this.emailService = emailService;
     }
 
     @Transactional
@@ -45,10 +54,20 @@ public class AuthService {
                 request.displayName(),
                 request.profile()
         );
-        user = userRepository.save(user);
 
+        // Generate verification token
+        String token = generateToken();
+        user.setVerificationToken(token);
+        user.setVerificationExpiry(Instant.now().plus(VERIFICATION_EXPIRY));
+
+        user = userRepository.save(user);
         seedDefaultDomains(user);
 
+        // Send verification email (async-safe: doesn't affect the transaction)
+        emailService.sendVerificationEmail(user.getEmail(), user.getDisplayName(), token);
+
+        // Return tokens so the app can proceed — user has a grace period
+        // until the access token expires, then login/refresh will block
         return buildAuthResponse(user);
     }
 
@@ -59,6 +78,15 @@ public class AuthService {
         if (!passwordEncoder.matches(request.password(), user.getPasswordHash())) {
             throw new BadCredentialsException("Invalid email or password");
         }
+
+        if (!user.isEmailVerified()) {
+            throw new BadCredentialsException(
+                    "Please verify your email before signing in. Check your inbox for a verification link.");
+        }
+
+        // Track last login
+        user.setLastLoginAt(Instant.now());
+        userRepository.save(user);
 
         return buildAuthResponse(user);
     }
@@ -71,19 +99,60 @@ public class AuthService {
         }
 
         String email = jwtUtil.extractEmail(token);
-        Long userId = jwtUtil.extractUserId(token);
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BadCredentialsException("User not found"));
 
+        if (!user.isEmailVerified()) {
+            throw new BadCredentialsException(
+                    "Please verify your email before continuing. Check your inbox for a verification link.");
+        }
+
         String newAccessToken = jwtUtil.generateAccessToken(user.getEmail(), user.getId());
         return new AuthResponse(user.getId(), newAccessToken, null, 3600);
+    }
+
+    @Transactional
+    public boolean verifyEmail(String token) {
+        User user = userRepository.findByVerificationToken(token).orElse(null);
+        if (user == null) return false;
+
+        if (user.isEmailVerified()) return true; // already verified
+
+        if (user.getVerificationExpiry() != null && Instant.now().isAfter(user.getVerificationExpiry())) {
+            return false; // expired
+        }
+
+        user.setEmailVerified(true);
+        user.setVerificationToken(null);
+        user.setVerificationExpiry(null);
+        userRepository.save(user);
+        return true;
+    }
+
+    @Transactional
+    public void resendVerification(String email) {
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (user == null || user.isEmailVerified()) return;
+
+        String token = generateToken();
+        user.setVerificationToken(token);
+        user.setVerificationExpiry(Instant.now().plus(VERIFICATION_EXPIRY));
+        userRepository.save(user);
+
+        emailService.sendVerificationEmail(user.getEmail(), user.getDisplayName(), token);
     }
 
     private AuthResponse buildAuthResponse(User user) {
         String accessToken = jwtUtil.generateAccessToken(user.getEmail(), user.getId());
         String refreshToken = jwtUtil.generateRefreshToken(user.getEmail(), user.getId());
         return new AuthResponse(user.getId(), accessToken, refreshToken, 3600);
+    }
+
+    private String generateToken() {
+        byte[] bytes = new byte[32];
+        new SecureRandom().nextBytes(bytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
     }
 
     private void seedDefaultDomains(User user) {

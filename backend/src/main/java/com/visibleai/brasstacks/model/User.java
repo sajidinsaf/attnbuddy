@@ -55,6 +55,18 @@ public class User {
     @Column(name = "ai_api_key", length = 500)
     private String aiApiKey;
 
+    @Column(name = "email_verified", nullable = false)
+    private boolean emailVerified = false;
+
+    @Column(name = "verification_token", length = 64)
+    private String verificationToken;
+
+    @Column(name = "verification_expiry")
+    private Instant verificationExpiry;
+
+    @Column(name = "last_login_at")
+    private Instant lastLoginAt;
+
     public enum Profile {
         EXECUTIVE, PROFESSIONAL, STUDENT
     }
@@ -116,6 +128,14 @@ public class User {
     public void setAiProvider(AiProvider aiProvider) { this.aiProvider = aiProvider; }
     public String getAiApiKey() { return aiApiKey; }
     public void setAiApiKey(String aiApiKey) { this.aiApiKey = aiApiKey; }
+    public boolean isEmailVerified() { return emailVerified; }
+    public void setEmailVerified(boolean emailVerified) { this.emailVerified = emailVerified; }
+    public String getVerificationToken() { return verificationToken; }
+    public void setVerificationToken(String verificationToken) { this.verificationToken = verificationToken; }
+    public Instant getVerificationExpiry() { return verificationExpiry; }
+    public void setVerificationExpiry(Instant verificationExpiry) { this.verificationExpiry = verificationExpiry; }
+    public Instant getLastLoginAt() { return lastLoginAt; }
+    public void setLastLoginAt(Instant lastLoginAt) { this.lastLoginAt = lastLoginAt; }
 
     public boolean isInQuietHours() {
         if (quietStart == null || quietEnd == null) return false;
