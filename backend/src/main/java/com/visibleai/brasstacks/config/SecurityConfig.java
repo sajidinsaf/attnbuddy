@@ -30,6 +30,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/contact").permitAll()
                         .requestMatchers("/", "/index.html", "/privacy.html", "/terms.html", "/guide.html", "/contact.html").permitAll()
+                        .requestMatchers("/*.png", "/*.ico", "/*.svg", "/*.css", "/*.js").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .anyRequest().authenticated())
                 .headers(headers -> headers
