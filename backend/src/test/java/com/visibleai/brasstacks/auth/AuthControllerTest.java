@@ -107,6 +107,9 @@ class AuthControllerTest {
                         .content(objectMapper.writeValueAsString(registerReq)))
                 .andExpect(status().isCreated());
 
+        // Verify the user before login
+        verifyUser("login@example.com");
+
         var loginReq = new LoginRequest("login@example.com", "password123");
         mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -140,6 +143,9 @@ class AuthControllerTest {
                 .andExpect(status().isCreated())
                 .andReturn();
 
+        // Verify the user before refresh
+        verifyUser("refresh@example.com");
+
         var authResponse = objectMapper.readTree(result.getResponse().getContentAsString());
         String refreshToken = authResponse.get("refreshToken").asText();
 
@@ -148,5 +154,29 @@ class AuthControllerTest {
                         .content("{\"refreshToken\":\"" + refreshToken + "\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accessToken").isNotEmpty());
+    }
+
+    @Test
+    void login_withUnverifiedEmail_returns401() throws Exception {
+        var registerReq = new RegisterRequest("unverified@example.com", "password123", "User", User.Profile.PROFESSIONAL);
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(registerReq)))
+                .andExpect(status().isCreated());
+
+        // Do NOT verify — login should fail
+        var loginReq = new LoginRequest("unverified@example.com", "password123");
+        mockMvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginReq)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    private void verifyUser(String email) {
+        var user = userRepository.findByEmail(email).orElseThrow();
+        user.setEmailVerified(true);
+        user.setVerificationToken(null);
+        user.setVerificationExpiry(null);
+        userRepository.save(user);
     }
 }

@@ -51,11 +51,23 @@ public class ChatService {
 
         sb.append("## About Brasstacks\n");
         sb.append("Brasstacks shows ONE task at a time (the Right Now screen) instead of overwhelming lists. ");
-        sb.append("It uses smart prioritization (Eisenhower matrix + deadlines + learned patterns). ");
-        sb.append("Key features: micro-steps (break tasks into tiny actions), focus timer, focus companion ");
-        sb.append("(virtual companion during work), rescue mode (for overwhelm — breathing, grounding, ");
-        sb.append("5-min micro-session), context breadcrumbs (remember where you left off), ");
-        sb.append("energy tracking, goals, and gentle nudges.\n\n");
+        sb.append("It uses smart prioritization (Eisenhower matrix + deadlines + learned patterns).\n\n");
+        sb.append("Key features and how to use them:\n");
+        sb.append("- **Right Now**: Shows the single most important task. Actions: Start (focus timer), Done, Skip, Snooze.\n");
+        sb.append("- **Capture**: Tap the + Capture tab to quickly add a task. Set priority using the Eisenhower grid. ");
+        sb.append("Choose One-time or Sustained (daily effort over time).\n");
+        sb.append("- **Micro-steps**: On the Right Now screen, tasks can have small steps listed below them. ");
+        sb.append("You can add steps manually or use AI to auto-generate them.\n");
+        sb.append("- **Focus timer**: Tap 'Start Focus Session' on a task to begin a timed work session.\n");
+        sb.append("- **Focus companion**: A virtual companion that sits with you during focus sessions — ");
+        sb.append("provides gentle check-ins and accountability. Start it from the Right Now screen.\n");
+        sb.append("- **Rescue mode**: Tap 'I'm overwhelmed' at the bottom of Right Now. Options: just 5 minutes, ");
+        sb.append("park it with a plan, breathing exercise, or grounding exercise.\n");
+        sb.append("- **Context breadcrumbs**: When you leave a task, Brasstacks remembers where you left off.\n");
+        sb.append("- **Goals**: Set goals in the app and link tasks to them for better prioritization.\n");
+        sb.append("- **Settings**: Configure nudge frequency, quiet hours, and app tone (supportive, peer, or playful).\n");
+        sb.append("- **AI assistant (this chat)**: You are the AI assistant. The user connected their own API key ");
+        sb.append("in Settings > AI Features. You can help with tasks, app guidance, and productivity advice.\n\n");
 
         sb.append("## How to help\n");
         sb.append("- Answer questions about how the app works\n");
