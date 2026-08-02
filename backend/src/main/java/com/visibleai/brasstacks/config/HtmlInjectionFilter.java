@@ -17,7 +17,7 @@ public class HtmlInjectionFilter implements Filter {
 
     private static final String HEAD_INJECTION = """
             <!-- VerOps RUM SDK v2 -->
-            <script src="https://app.verops.io/cdn/rum-sdk/v2/verops-rum.min.js" integrity="sha384-iJ7sm3ovPpAW+QOeb7wTgOmDkiWfwKp8xwd9r0auRB4Ve0sZArKPzcZoxDoE4gZq" crossorigin="anonymous" defer></script>
+            <script src="https://app.verops.io/cdn/rum-sdk/v2/verops-rum.min.js" integrity="sha384-pk1srj7Bo/94eagzDT6wSZCr5YtW6bhz0+grI4iMrJYBaGCNUftvZJa0Sut8n1F7" crossorigin="anonymous" defer></script>
             <script>
               document.addEventListener('DOMContentLoaded', function () {
                 window.VeropsRUM && window.VeropsRUM.init({
