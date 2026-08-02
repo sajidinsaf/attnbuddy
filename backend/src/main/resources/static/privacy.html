@@ -169,5 +169,20 @@
         <p style="margin-top: 8px;"><a href="privacy.html">Privacy Policy</a> &middot; <a href="terms.html">Terms &amp; Conditions</a> &middot; <a href="guide.html">Guide</a> &middot; <a href="contact.html">Contact</a></p>
         <p style="margin-top: 8px;"><a href="https://facebook.com/visibleai" target="_blank">Facebook</a> &middot; <a href="https://instagram.com/visibleai" target="_blank">Instagram</a> &middot; <a href="https://linkedin.com/company/visibleai" target="_blank">LinkedIn</a></p>
     </div>
+
+<!-- VerOps RUM SDK v2 -->
+<script src="https://app.verops.io/cdn/rum-sdk/v2/verops-rum.min.js" integrity="sha384-iJ7sm3ovPpAW+QOeb7wTgOmDkiWfwKp8xwd9r0auRB4Ve0sZArKPzcZoxDoE4gZq" crossorigin="anonymous" defer></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.VeropsRUM && window.VeropsRUM.init({
+      appId: 'rum_fec90b578874438a',
+      apiKey: 'rum_pk_82uuMponG6KUKX8UJLQXl7W480xqV666XXqExYRjIGY',
+      endpoint: 'https://ingest.verops.io/rum/v2/beacon',
+      environment: 'prod',
+      respectDoNotTrack: true,
+    });
+  });
+</script>
+
 </body>
 </html>
