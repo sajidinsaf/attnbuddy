@@ -1,9 +1,7 @@
 package com.visibleai.brasstacks.task;
 
-import com.visibleai.brasstacks.ai.AiService;
-import com.visibleai.brasstacks.ai.AiServiceFactory;
-import com.visibleai.brasstacks.ai.AiUsageTracker;
-import com.visibleai.brasstacks.ai.DataClassifier;
+import com.visibleai.brasstacks.ai.*;
+import com.visibleai.brasstacks.config.JwtAuthenticationFilter;
 import com.visibleai.brasstacks.model.Task;
 import com.visibleai.brasstacks.model.User;
 import com.visibleai.brasstacks.repository.UserRepository;
@@ -137,7 +135,20 @@ public class TaskController {
             throw new IllegalArgumentException("AI usage limit reached. Try again later or use a template.");
         }
 
-        AiService ai = aiServiceFactory.forUser(user);
+        // Decrypt the API key using the derived key from the JWT
+        JwtAuthenticationFilter.AuthDetails details =
+                (JwtAuthenticationFilter.AuthDetails) auth.getDetails();
+        String derivedKey = details.derivedKey();
+        String decryptedApiKey;
+        try {
+            decryptedApiKey = user.getAiApiKey() != null && ApiKeyEncryptor.isEncrypted(user.getAiApiKey())
+                    ? ApiKeyEncryptor.decrypt(user.getAiApiKey(), derivedKey)
+                    : user.getAiApiKey();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Unable to decrypt your API key. Please re-enter it in Settings.");
+        }
+
+        AiService ai = aiServiceFactory.forUser(user, decryptedApiKey);
         if (ai == null || !ai.isAvailable()) {
             throw new IllegalArgumentException("AI is not configured. Add your API key in Settings.");
         }

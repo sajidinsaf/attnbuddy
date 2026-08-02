@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Pressable, StyleSheet, Alert, ActivityIndicator, ScrollView, Keyboard } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useCallback, useState } from 'react';
 import { useFocusEffect, router } from 'expo-router';
@@ -10,8 +10,8 @@ type Quadrant = { urgency: Urgency; importance: Importance };
 
 const quadrants: { label: string; q: Quadrant; color: string }[] = [
   { label: 'Urgent &\nImportant', q: { urgency: 'URGENT', importance: 'IMPORTANT' }, color: '#EF4444' },
-  { label: 'Not Urgent &\nImportant', q: { urgency: 'NOT_URGENT', importance: 'IMPORTANT' }, color: '#6366F1' },
-  { label: 'Urgent &\nNot Important', q: { urgency: 'URGENT', importance: 'NOT_IMPORTANT' }, color: '#F59E0B' },
+  { label: 'Not Urgent but\nImportant', q: { urgency: 'NOT_URGENT', importance: 'IMPORTANT' }, color: '#6366F1' },
+  { label: 'Urgent but\nNot Important', q: { urgency: 'URGENT', importance: 'NOT_IMPORTANT' }, color: '#F59E0B' },
   { label: 'Not Urgent &\nNot Important', q: { urgency: 'NOT_URGENT', importance: 'NOT_IMPORTANT' }, color: '#334155' },
 ];
 
@@ -70,7 +70,8 @@ export default function CaptureScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
-      <ScrollView style={styles.content} keyboardShouldPersistTaps="handled">
+      <Pressable style={{ flex: 1 }} onPress={Keyboard.dismiss}>
+      <ScrollView style={styles.content} keyboardShouldPersistTaps="handled" onScrollBeginDrag={Keyboard.dismiss}>
         <Text style={styles.heading}>What needs doing?</Text>
 
         <TextInput
@@ -80,6 +81,8 @@ export default function CaptureScreen() {
           value={title}
           onChangeText={setTitle}
           autoFocus
+          returnKeyType="done"
+          onSubmitEditing={Keyboard.dismiss}
         />
 
         {/* Task type toggle */}
@@ -172,6 +175,7 @@ export default function CaptureScreen() {
 
         <View style={{ height: 40 }} />
       </ScrollView>
+      </Pressable>
     </SafeAreaView>
   );
 }

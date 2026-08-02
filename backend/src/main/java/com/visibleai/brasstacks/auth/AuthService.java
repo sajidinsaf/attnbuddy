@@ -1,5 +1,6 @@
 package com.visibleai.brasstacks.auth;
 
+import com.visibleai.brasstacks.ai.ApiKeyEncryptor;
 import com.visibleai.brasstacks.auth.dto.AuthResponse;
 import com.visibleai.brasstacks.auth.dto.LoginRequest;
 import com.visibleai.brasstacks.auth.dto.RefreshRequest;
@@ -49,7 +50,8 @@ public class AuthService {
 
         seedDefaultDomains(user);
 
-        return buildAuthResponse(user);
+        String derivedKey = ApiKeyEncryptor.deriveKey(request.password(), user.getEmail());
+        return buildAuthResponse(user, derivedKey);
     }
 
     public AuthResponse login(LoginRequest request) {
@@ -60,7 +62,15 @@ public class AuthService {
             throw new BadCredentialsException("Invalid email or password");
         }
 
-        return buildAuthResponse(user);
+        String derivedKey = ApiKeyEncryptor.deriveKey(request.password(), user.getEmail());
+
+        // Migrate any plaintext API key to encrypted format
+        if (user.getAiApiKey() != null && !ApiKeyEncryptor.isEncrypted(user.getAiApiKey())) {
+            user.setAiApiKey(ApiKeyEncryptor.encrypt(user.getAiApiKey(), derivedKey));
+            userRepository.save(user);
+        }
+
+        return buildAuthResponse(user, derivedKey);
     }
 
     public AuthResponse refresh(RefreshRequest request) {
@@ -71,18 +81,18 @@ public class AuthService {
         }
 
         String email = jwtUtil.extractEmail(token);
-        Long userId = jwtUtil.extractUserId(token);
+        String derivedKey = jwtUtil.extractDerivedKey(token);
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BadCredentialsException("User not found"));
 
-        String newAccessToken = jwtUtil.generateAccessToken(user.getEmail(), user.getId());
+        String newAccessToken = jwtUtil.generateAccessToken(user.getEmail(), user.getId(), derivedKey);
         return new AuthResponse(user.getId(), newAccessToken, null, 3600);
     }
 
-    private AuthResponse buildAuthResponse(User user) {
-        String accessToken = jwtUtil.generateAccessToken(user.getEmail(), user.getId());
-        String refreshToken = jwtUtil.generateRefreshToken(user.getEmail(), user.getId());
+    private AuthResponse buildAuthResponse(User user, String derivedKey) {
+        String accessToken = jwtUtil.generateAccessToken(user.getEmail(), user.getId(), derivedKey);
+        String refreshToken = jwtUtil.generateRefreshToken(user.getEmail(), user.getId(), derivedKey);
         return new AuthResponse(user.getId(), accessToken, refreshToken, 3600);
     }
 

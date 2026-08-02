@@ -39,10 +39,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (jwtUtil.isValid(token) && jwtUtil.isAccessToken(token)) {
             String email = jwtUtil.extractEmail(token);
             Long userId = jwtUtil.extractUserId(token);
+            String derivedKey = jwtUtil.extractDerivedKey(token);
 
+            // Store userId and derivedKey together so controllers can access both
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(email, userId, List.of());
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            authentication.setDetails(new AuthDetails(
+                    new WebAuthenticationDetailsSource().buildDetails(request), derivedKey));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
@@ -55,4 +58,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String path = request.getServletPath();
         return path.startsWith("/api/auth/");
     }
+
+    /**
+     * Wraps the standard WebAuthenticationDetails with the derived encryption key
+     * so controllers can access it from the Authentication object.
+     */
+    public record AuthDetails(Object webDetails, String derivedKey) {}
 }

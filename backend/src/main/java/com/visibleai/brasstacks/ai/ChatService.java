@@ -37,9 +37,9 @@ public class ChatService {
         this.domainRepository = domainRepository;
     }
 
-    public String chat(User user, List<ChatMessage> history, String userMessage) {
+    public String chat(User user, String apiKey, List<ChatMessage> history, String userMessage) {
         String systemPrompt = buildSystemPrompt(user);
-        String response = callAi(user, systemPrompt, history, userMessage);
+        String response = callAi(user, apiKey, systemPrompt, history, userMessage);
         return response != null ? response : "I couldn't process that right now. Please try again.";
     }
 
@@ -139,13 +139,13 @@ public class ChatService {
         };
     }
 
-    private String callAi(User user, String systemPrompt, List<ChatMessage> history, String userMessage) {
-        if (user.getAiProvider() == null || user.getAiApiKey() == null) return null;
+    private String callAi(User user, String apiKey, String systemPrompt, List<ChatMessage> history, String userMessage) {
+        if (user.getAiProvider() == null || apiKey == null) return null;
 
         return switch (user.getAiProvider()) {
-            case CLAUDE -> callClaude(user.getAiApiKey(), systemPrompt, history, userMessage);
-            case OPENAI -> callOpenAi(user.getAiApiKey(), systemPrompt, history, userMessage);
-            case GEMINI -> callGemini(user.getAiApiKey(), systemPrompt, history, userMessage);
+            case CLAUDE -> callClaude(apiKey, systemPrompt, history, userMessage);
+            case OPENAI -> callOpenAi(apiKey, systemPrompt, history, userMessage);
+            case GEMINI -> callGemini(apiKey, systemPrompt, history, userMessage);
         };
     }
 

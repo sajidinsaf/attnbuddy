@@ -20,7 +20,7 @@ class JwtUtilTest {
 
     @Test
     void generateAccessToken_producesValidToken() {
-        String token = jwtUtil.generateAccessToken("test@example.com", 1L);
+        String token = jwtUtil.generateAccessToken("test@example.com", 1L, null);
 
         assertNotNull(token);
         assertTrue(jwtUtil.isValid(token));
@@ -30,7 +30,7 @@ class JwtUtilTest {
 
     @Test
     void generateRefreshToken_producesValidToken() {
-        String token = jwtUtil.generateRefreshToken("test@example.com", 1L);
+        String token = jwtUtil.generateRefreshToken("test@example.com", 1L, null);
 
         assertNotNull(token);
         assertTrue(jwtUtil.isValid(token));
@@ -40,14 +40,14 @@ class JwtUtilTest {
 
     @Test
     void extractEmail_returnsCorrectEmail() {
-        String token = jwtUtil.generateAccessToken("test@example.com", 1L);
+        String token = jwtUtil.generateAccessToken("test@example.com", 1L, null);
 
         assertEquals("test@example.com", jwtUtil.extractEmail(token));
     }
 
     @Test
     void extractUserId_returnsCorrectId() {
-        String token = jwtUtil.generateAccessToken("test@example.com", 42L);
+        String token = jwtUtil.generateAccessToken("test@example.com", 42L, null);
 
         assertEquals(42L, jwtUtil.extractUserId(token));
     }
@@ -60,7 +60,7 @@ class JwtUtilTest {
                 -1000L
         );
 
-        String token = shortLivedJwt.generateAccessToken("test@example.com", 1L);
+        String token = shortLivedJwt.generateAccessToken("test@example.com", 1L, null);
         assertFalse(shortLivedJwt.isValid(token));
     }
 
@@ -76,8 +76,8 @@ class JwtUtilTest {
 
     @Test
     void accessAndRefreshTokens_haveDifferentTypes() {
-        String access = jwtUtil.generateAccessToken("test@example.com", 1L);
-        String refresh = jwtUtil.generateRefreshToken("test@example.com", 1L);
+        String access = jwtUtil.generateAccessToken("test@example.com", 1L, null);
+        String refresh = jwtUtil.generateRefreshToken("test@example.com", 1L, null);
 
         assertEquals("access", jwtUtil.extractType(access));
         assertEquals("refresh", jwtUtil.extractType(refresh));
@@ -85,8 +85,8 @@ class JwtUtilTest {
 
     @Test
     void differentUsers_getDifferentTokens() {
-        String token1 = jwtUtil.generateAccessToken("user1@example.com", 1L);
-        String token2 = jwtUtil.generateAccessToken("user2@example.com", 2L);
+        String token1 = jwtUtil.generateAccessToken("user1@example.com", 1L, null);
+        String token2 = jwtUtil.generateAccessToken("user2@example.com", 2L, null);
 
         assertNotEquals(token1, token2);
         assertEquals("user1@example.com", jwtUtil.extractEmail(token1));

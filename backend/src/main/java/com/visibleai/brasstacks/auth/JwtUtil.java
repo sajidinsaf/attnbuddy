@@ -27,24 +27,27 @@ public class JwtUtil {
         this.refreshTokenExpiry = refreshTokenExpiry;
     }
 
-    public String generateAccessToken(String email, Long userId) {
-        return buildToken(email, userId, accessTokenExpiry, "access");
+    public String generateAccessToken(String email, Long userId, String derivedKey) {
+        return buildToken(email, userId, accessTokenExpiry, "access", derivedKey);
     }
 
-    public String generateRefreshToken(String email, Long userId) {
-        return buildToken(email, userId, refreshTokenExpiry, "refresh");
+    public String generateRefreshToken(String email, Long userId, String derivedKey) {
+        return buildToken(email, userId, refreshTokenExpiry, "refresh", derivedKey);
     }
 
-    private String buildToken(String email, Long userId, long expiryMs, String type) {
+    private String buildToken(String email, Long userId, long expiryMs, String type, String derivedKey) {
         Date now = new Date();
-        return Jwts.builder()
+        var builder = Jwts.builder()
                 .subject(email)
                 .claim("userId", userId)
                 .claim("type", type)
                 .issuedAt(now)
                 .expiration(new Date(now.getTime() + expiryMs))
-                .signWith(signingKey)
-                .compact();
+                .signWith(signingKey);
+        if (derivedKey != null) {
+            builder.claim("dk", derivedKey);
+        }
+        return builder.compact();
     }
 
     public String extractEmail(String token) {
@@ -57,6 +60,10 @@ public class JwtUtil {
 
     public String extractType(String token) {
         return extractClaims(token).get("type", String.class);
+    }
+
+    public String extractDerivedKey(String token) {
+        return extractClaims(token).get("dk", String.class);
     }
 
     public boolean isValid(String token) {

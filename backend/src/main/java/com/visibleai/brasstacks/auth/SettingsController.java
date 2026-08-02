@@ -1,5 +1,7 @@
 package com.visibleai.brasstacks.auth;
 
+import com.visibleai.brasstacks.ai.ApiKeyEncryptor;
+import com.visibleai.brasstacks.config.JwtAuthenticationFilter;
 import com.visibleai.brasstacks.model.User;
 import com.visibleai.brasstacks.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
@@ -77,7 +79,8 @@ public class SettingsController {
             user.setAiProvider(User.AiProvider.valueOf(request.aiProvider()));
         }
         if (request.aiApiKey() != null) {
-            user.setAiApiKey(request.aiApiKey());
+            String derivedKey = getDerivedKey(auth);
+            user.setAiApiKey(ApiKeyEncryptor.encrypt(request.aiApiKey(), derivedKey));
         }
         userRepository.save(user);
         return new AiSettings(user.isAiEnabled(),
@@ -87,6 +90,12 @@ public class SettingsController {
 
     private Long getUserId(Authentication auth) {
         return (Long) auth.getCredentials();
+    }
+
+    private String getDerivedKey(Authentication auth) {
+        JwtAuthenticationFilter.AuthDetails details =
+                (JwtAuthenticationFilter.AuthDetails) auth.getDetails();
+        return details.derivedKey();
     }
 
     public record NudgeSettings(String nudgeFrequency, String quietStart, String quietEnd) {}

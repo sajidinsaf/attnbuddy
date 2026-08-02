@@ -1,5 +1,6 @@
 package com.visibleai.brasstacks.ai;
 
+import com.visibleai.brasstacks.config.JwtAuthenticationFilter;
 import com.visibleai.brasstacks.model.User;
 import com.visibleai.brasstacks.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
@@ -44,13 +45,31 @@ public class ChatController {
             return ResponseEntity.ok(Map.of("reply", "You've reached your AI usage limit for now. Try again in a bit."));
         }
 
+        // Decrypt the API key using the derived key from the JWT
+        JwtAuthenticationFilter.AuthDetails details =
+                (JwtAuthenticationFilter.AuthDetails) auth.getDetails();
+        String derivedKey = details.derivedKey();
+
+        String apiKey;
+        try {
+            apiKey = ApiKeyEncryptor.isEncrypted(user.getAiApiKey())
+                    ? ApiKeyEncryptor.decrypt(user.getAiApiKey(), derivedKey)
+                    : user.getAiApiKey();
+        } catch (Exception e) {
+            return ResponseEntity.ok(Map.of(
+                    "reply", "Unable to decrypt your API key. Please re-enter it in Settings > AI Features."));
+        }
+
         List<ChatService.ChatMessage> history = request.history() != null
                 ? request.history().stream()
                     .map(m -> new ChatService.ChatMessage(m.role(), m.content()))
                     .toList()
                 : List.of();
 
-        String reply = chatService.chat(user, history, request.message());
+        String reply = chatService.chat(user, apiKey, history, request.message());
+        if (reply == null) {
+            reply = "I couldn't process that right now. Please try again.";
+        }
         aiUsageTracker.recordUsage(userId, user.getAiProvider().name());
 
         return ResponseEntity.ok(Map.of("reply", reply));
