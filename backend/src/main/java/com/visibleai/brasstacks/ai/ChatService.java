@@ -4,6 +4,8 @@ import com.visibleai.brasstacks.model.*;
 import com.visibleai.brasstacks.repository.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.tracing.Span;
+import io.micrometer.tracing.Tracer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -29,12 +31,14 @@ public class ChatService {
     private final TaskRepository taskRepository;
     private final GoalRepository goalRepository;
     private final LifeDomainRepository domainRepository;
+    private final Tracer tracer;
 
     public ChatService(TaskRepository taskRepository, GoalRepository goalRepository,
-                       LifeDomainRepository domainRepository) {
+                       LifeDomainRepository domainRepository, Tracer tracer) {
         this.taskRepository = taskRepository;
         this.goalRepository = goalRepository;
         this.domainRepository = domainRepository;
+        this.tracer = tracer;
     }
 
     public String chat(User user, String apiKey, List<ChatMessage> history, String userMessage) {
@@ -154,11 +158,34 @@ public class ChatService {
     private String callAi(User user, String apiKey, String systemPrompt, List<ChatMessage> history, String userMessage) {
         if (user.getAiProvider() == null || apiKey == null) return null;
 
-        return switch (user.getAiProvider()) {
-            case CLAUDE -> callClaude(apiKey, systemPrompt, history, userMessage);
-            case OPENAI -> callOpenAi(apiKey, systemPrompt, history, userMessage);
-            case GEMINI -> callGemini(apiKey, systemPrompt, history, userMessage);
+        String provider = user.getAiProvider().name().toLowerCase();
+        String model = switch (user.getAiProvider()) {
+            case CLAUDE -> "claude-haiku-4-5-20251001";
+            case OPENAI -> "gpt-4o-mini";
+            case GEMINI -> "gemini-2.0-flash";
         };
+
+        Span span = tracer.nextSpan().name("gen_ai.chat " + provider)
+                .tag("gen_ai.system", provider)
+                .tag("gen_ai.request.model", model)
+                .tag("gen_ai.operation.name", "chat")
+                .tag("gen_ai.request.max_tokens", "1000")
+                .start();
+
+        try (Tracer.SpanInScope ws = tracer.withSpan(span)) {
+            String result = switch (user.getAiProvider()) {
+                case CLAUDE -> callClaude(apiKey, systemPrompt, history, userMessage);
+                case OPENAI -> callOpenAi(apiKey, systemPrompt, history, userMessage);
+                case GEMINI -> callGemini(apiKey, systemPrompt, history, userMessage);
+            };
+            span.tag("gen_ai.response.status", result != null ? "success" : "error");
+            return result;
+        } catch (Exception e) {
+            span.error(e);
+            throw e;
+        } finally {
+            span.end();
+        }
     }
 
     private String callClaude(String apiKey, String systemPrompt, List<ChatMessage> history, String userMessage) {

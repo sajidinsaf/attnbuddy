@@ -1,5 +1,7 @@
 package com.visibleai.brasstacks.auth;
 
+import io.micrometer.tracing.Span;
+import io.micrometer.tracing.Tracer;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -30,6 +32,12 @@ public class EmailService {
     @Value("${app.base-url:https://brasstacks.visibleai.com}")
     private String baseUrl;
 
+    private final Tracer tracer;
+
+    public EmailService(Tracer tracer) {
+        this.tracer = tracer;
+    }
+
     public void sendVerificationEmail(String toEmail, String displayName, String token) {
         String verifyUrl = baseUrl + "/api/auth/verify?token=" + token;
 
@@ -54,11 +62,22 @@ public class EmailService {
                 </div>
                 """.formatted(displayName, verifyUrl);
 
-        try {
+        Span span = tracer.nextSpan().name("email.send verification")
+                .tag("email.type", "verification")
+                .tag("email.recipient", toEmail)
+                .tag("email.smtp.host", smtpHost)
+                .start();
+
+        try (Tracer.SpanInScope ws = tracer.withSpan(span)) {
             sendHtmlEmail(toEmail, "Verify your Brasstacks account", html);
+            span.tag("email.status", "sent");
             log.info("Verification email sent to: {}", toEmail);
         } catch (Exception e) {
+            span.error(e);
+            span.tag("email.status", "failed");
             log.error("Failed to send verification email to: {}", toEmail, e);
+        } finally {
+            span.end();
         }
     }
 
