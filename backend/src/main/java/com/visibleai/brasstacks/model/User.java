@@ -113,6 +113,7 @@ public class User {
 
     public void setDisplayName(String displayName) { this.displayName = displayName; }
     public void setProfile(Profile profile) { this.profile = profile; }
+    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
 
     public NudgeFrequency getNudgeFrequency() { return nudgeFrequency; }
     public void setNudgeFrequency(NudgeFrequency nudgeFrequency) { this.nudgeFrequency = nudgeFrequency; }

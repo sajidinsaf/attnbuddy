@@ -1,5 +1,6 @@
 package com.visibleai.brasstacks.auth;
 
+import com.visibleai.brasstacks.ai.ApiKeyEncryptor;
 import com.visibleai.brasstacks.auth.dto.AuthResponse;
 import com.visibleai.brasstacks.auth.dto.LoginRequest;
 import com.visibleai.brasstacks.auth.dto.RefreshRequest;
@@ -68,7 +69,8 @@ public class AuthService {
 
         // Return tokens so the app can proceed — user has a grace period
         // until the access token expires, then login/refresh will block
-        return buildAuthResponse(user);
+        String derivedKey = ApiKeyEncryptor.deriveKey(request.password(), user.getEmail());
+        return buildAuthResponse(user, derivedKey);
     }
 
     public AuthResponse login(LoginRequest request) {
@@ -84,11 +86,18 @@ public class AuthService {
                     "Please verify your email before signing in. Check your inbox for a verification link.");
         }
 
+        String derivedKey = ApiKeyEncryptor.deriveKey(request.password(), user.getEmail());
+
+        // Migrate any plaintext API key to encrypted format
+        if (user.getAiApiKey() != null && !ApiKeyEncryptor.isEncrypted(user.getAiApiKey())) {
+            user.setAiApiKey(ApiKeyEncryptor.encrypt(user.getAiApiKey(), derivedKey));
+        }
+
         // Track last login
         user.setLastLoginAt(Instant.now());
         userRepository.save(user);
 
-        return buildAuthResponse(user);
+        return buildAuthResponse(user, derivedKey);
     }
 
     public AuthResponse refresh(RefreshRequest request) {
@@ -99,6 +108,7 @@ public class AuthService {
         }
 
         String email = jwtUtil.extractEmail(token);
+        String derivedKey = jwtUtil.extractDerivedKey(token);
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BadCredentialsException("User not found"));
@@ -108,7 +118,7 @@ public class AuthService {
                     "Please verify your email before continuing. Check your inbox for a verification link.");
         }
 
-        String newAccessToken = jwtUtil.generateAccessToken(user.getEmail(), user.getId());
+        String newAccessToken = jwtUtil.generateAccessToken(user.getEmail(), user.getId(), derivedKey);
         return new AuthResponse(user.getId(), newAccessToken, null, 3600);
     }
 
@@ -143,9 +153,9 @@ public class AuthService {
         emailService.sendVerificationEmail(user.getEmail(), user.getDisplayName(), token);
     }
 
-    private AuthResponse buildAuthResponse(User user) {
-        String accessToken = jwtUtil.generateAccessToken(user.getEmail(), user.getId());
-        String refreshToken = jwtUtil.generateRefreshToken(user.getEmail(), user.getId());
+    private AuthResponse buildAuthResponse(User user, String derivedKey) {
+        String accessToken = jwtUtil.generateAccessToken(user.getEmail(), user.getId(), derivedKey);
+        String refreshToken = jwtUtil.generateRefreshToken(user.getEmail(), user.getId(), derivedKey);
         return new AuthResponse(user.getId(), accessToken, refreshToken, 3600);
     }
 
