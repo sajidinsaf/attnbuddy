@@ -57,7 +57,15 @@
         <tr><td>Skip and snooze counts</td><td>Adjusting task priority scoring</td></tr>
     </table>
 
-    <h3>2.4 Technical Data</h3>
+    <h3>2.4 AI Configuration (Optional)</h3>
+    <table>
+        <tr><th>Data</th><th>Purpose</th></tr>
+        <tr><td>AI provider preference</td><td>Routing requests to your chosen AI provider (Claude, OpenAI, or Gemini)</td></tr>
+        <tr><td>AI API key</td><td>Authenticating with your chosen AI provider. <strong>Encrypted using your password</strong> &mdash; we cannot read your key. See Section 4 for details.</td></tr>
+        <tr><td>AI chat history</td><td>Sent to your AI provider during your session for conversational context. Not stored on our server.</td></tr>
+    </table>
+
+    <h3>2.5 Technical Data</h3>
     <table>
         <tr><th>Data</th><th>Purpose</th></tr>
         <tr><td>Device push token</td><td>Delivering push notifications</td></tr>
@@ -75,12 +83,34 @@
         <li>Improve the App based on aggregated, anonymized usage patterns</li>
     </ul>
 
-    <h2>4. AI and Data Training Transparency</h2>
-    <p>We are explicit about AI:</p>
+    <h2>4. AI Features and Data Transparency</h2>
+    <p>Brasstacks includes optional AI features that you can enable in Settings. Here is exactly how they work:</p>
+
+    <h3>4.1 Bring Your Own Key</h3>
+    <p>Brasstacks does not provide its own AI. You connect your own account from one of three supported providers: Claude (Anthropic), OpenAI, or Google Gemini. You control the provider, the costs, and can revoke access at any time by deleting your key.</p>
+
+    <h3>4.2 API Key Security</h3>
+    <ul>
+        <li>Your API key is <strong>encrypted using your password</strong> before it is stored on our server</li>
+        <li>The encryption key is derived from your login credentials &mdash; <strong>only your login can decrypt it</strong></li>
+        <li>We cannot read, access, or recover your API key</li>
+        <li>If you reset your password, the encrypted key becomes unreadable and you will need to re-enter it</li>
+    </ul>
+
+    <h3>4.3 What Data is Sent to AI Providers</h3>
+    <p>When you use the AI assistant or auto-generate micro-steps, the following data is sent to your chosen provider:</p>
+    <ul>
+        <li>Your message or question</li>
+        <li>Recent chat history (for conversational context)</li>
+        <li>A summary of your current tasks, goals, and life domains (to give the assistant context)</li>
+    </ul>
+    <p><strong>Before any data is sent, personal details are automatically anonymized:</strong> email addresses, phone numbers, URLs, dates, and monetary amounts are replaced with placeholders (e.g., [email], [phone]).</p>
+
+    <h3>4.4 Data Training</h3>
     <ul>
         <li>Your data is <strong>NOT</strong> used to train any third-party AI models</li>
         <li>Your data is <strong>NOT</strong> used to train our own AI models</li>
-        <li>If AI features are introduced in the future, they will be opt-in and will not process your personal content through external AI services</li>
+        <li>Each AI provider has its own data policies &mdash; we encourage you to review them. The models used (Claude Haiku, GPT-4o mini, Gemini Flash) are lightweight models designed for fast responses, not training</li>
         <li>Task prioritization uses a deterministic scoring algorithm, not AI/ML</li>
     </ul>
 
@@ -112,6 +142,7 @@
         <li>All connections use HTTPS/TLS encryption in transit</li>
         <li>Passwords are hashed with bcrypt (12 rounds) — never stored in plain text</li>
         <li>Authentication uses short-lived JWT access tokens with refresh token rotation</li>
+        <li>AI API keys are encrypted at rest using AES-256-GCM, with the encryption key derived from your password &mdash; not stored on our server</li>
         <li>Database access is restricted to the application service only</li>
     </ul>
 
