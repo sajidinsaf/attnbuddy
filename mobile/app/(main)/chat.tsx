@@ -97,7 +97,7 @@ export default function ChatScreen() {
               styles.messageBubble,
               item.role === 'user' ? styles.userBubble : styles.assistantBubble,
             ]}>
-              <Text style={[
+              <Text selectable style={[
                 styles.messageText,
                 item.role === 'user' && styles.userText,
               ]}>
